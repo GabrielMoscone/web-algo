@@ -1,0 +1,632 @@
+int main(){
+    int a,b,c,d,e;
+    b = 1;
+    if (a>b && a>c){
+        a = 1;
+        c = 1 + 4 * 5 / 10;
+        b = a + 20;
+    } else if (c<a){
+        e = 1;
+    } else {
+        b = 1;
+    }
+}
+
+int main(){
+    int a,b,c,d,e,i;
+    do{
+        for (i=0;i<10;i++){
+            b = 1;
+        }
+        a++;
+    } while (a < 10);
+}
+
+int main(){
+    int a, b, c, d, i, j;
+    a = 5 + (10*2-(2*1+2));
+    for (i=0; i<10; i++){
+		continue;
+        for (j=0; j<10; j++){
+            break;
+        }
+    }
+}
+
+
+// fibonacci
+#include <stdio.h>
+int main(){
+    int a, b , next, n, i;
+    a = 0;
+    b = 1;
+    scanf("%d", &n);
+
+    for (i = 1; i <= n; ++i) {
+        if (i == 1) {
+            printf("%d\n", a);
+            continue;
+        }
+        if (i == 2) {
+            printf("%d\n", b);
+            continue;
+        }
+        next = a + b;
+        a = b;
+        b = next;
+
+        printf("%d\n", next);
+    }
+}
+
+#include <stdio.h>
+int main(){
+    int arr[5];
+    int i;
+    int n;
+    n = 5;
+
+    for (i = 0; i < n; i++) {
+        printf("Numero %d ", i+1);
+        scanf("%d", &arr[i]);
+    }
+
+    int j, temp;
+    for (i = 0; i<n-1; i++) {
+        for (j = 0; j<n-i-1; j++) {
+            if (arr[j] > arr[j+1]) {
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+
+    printf("Numeros ordenados\n");
+    for (i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+
+// Soma da Diagonal
+#include <stdio.h>
+int main() {
+    int N, i, j;
+
+    printf("Digite o tamanho da matriz NxN ");
+    scanf("%d", &N);
+
+    int matriz[N][N];
+
+    printf("Digite os elementos da matriz\n");
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+            scanf("%d", &matriz[i][j]);
+
+
+    int soma_diagonal = 0;
+    for (i = 0; i < N; i++)
+        soma_diagonal += matriz[i][i];
+
+    printf("A soma da diagonal principal eh %d\n", soma_diagonal);
+}
+
+
+// Soma 4 notas e faça a média aritmética
+int main(){
+    // Desenvolva seu código C aqui!
+    float n1, n2, n3, n4;
+    float media;
+	scanf("%f%f%f%d", &n1, &n2, &n3, &n4);
+    media = (n1+n2+n3+n4)/4;
+	printf("%f", media);
+    return 0;
+}
+
+// Programa que reajusta 5% do valor lido
+int main() {
+    float valor, valorReajustado;
+
+    // Solicita ao usuário que insira um valor
+    printf("Digite um valor: ");
+    scanf("%f", &valor);
+
+    // Calcula o valor reajustado com 5% de aumento
+    valorReajustado = valor * 1.05;
+
+    // Imprime o valor reajustado
+    printf("Valor com reajuste de 5: %f\n", valorReajustado);
+
+    return 0;
+}
+
+//Calculo do IMC
+int main() {
+    float peso, altura, imc;
+
+    // Solicita ao usuário que insira o peso e a altura
+    printf("Digite seu peso (kg): ");
+    scanf("%f", &peso);
+    printf("Digite sua altura (m): ");
+    scanf("%f", &altura);
+
+    // Calcula o IMC
+    imc = peso / (altura * altura);
+
+    // Imprime o IMC e a condição
+    printf("Seu IMC é: %f\n", imc);
+
+    if (imc < 18.5) {
+        printf("Condição: Abaixo do peso\n");
+    } else if (imc >= 18.5 && imc < 25) {
+        printf("Condição: Peso ideal\n");
+    } else if (imc >= 25.0 && imc < 30) {
+        printf("Condição: Levemente acima do peso\n");
+    } else if (imc >= 30.0 && imc < 35) {
+        printf("Condição: Obesidade grau I\n");
+    } else if (imc >= 35.0 && imc < 40) {
+        printf("Condição: Obesidade grau II (severa)\n");
+    } else if (imc >= 40.0) {
+        printf("Condição: Obesidade grau III (mórbida)\n");
+    }
+
+    return 0;
+}
+
+// Anos, meses e dias vividos
+#include <stdio.h>
+int main() {
+    int diaNascimento, mesNascimento, anoNascimento;
+    int diaAtual, mesAtual, anoAtual;
+    int anos, meses, dias;
+
+    // Solicita ao usuário que insira a data de nascimento
+    printf("Digite o dia do seu nascimento: ");
+    scanf("%d", &diaNascimento);
+    printf("Digite o mês do seu nascimento: ");
+    scanf("%d", &mesNascimento);
+    printf("Digite o ano do seu nascimento: ");
+    scanf("%d", &anoNascimento);
+
+    // Solicita ao usuário que insira a data atual
+    printf("Digite o dia atual: ");
+    scanf("%d", &diaAtual);
+    printf("Digite o mês atual: ");
+    scanf("%d", &mesAtual);
+    printf("Digite o ano atual: ");
+    scanf("%d", &anoAtual);
+
+    // Calcula a diferença de anos, meses e dias
+    anos = anoAtual - anoNascimento;
+    meses = mesAtual - mesNascimento;
+    dias = diaAtual - diaNascimento;
+
+    // Ajusta os valores se necessário
+    if (dias < 0) {
+        dias += 30;
+        meses--;
+    }
+    if (meses < 0) {
+        meses += 12;
+        anos--;
+    }
+
+    // Imprime a idade em anos, meses e dias
+    printf("Você viveu %d anos, %d meses e %d dias.\n", anos, meses, dias);
+
+    return 0;
+}
+
+
+// Identificador de número primo
+#include <stdio.h>
+int main(){
+    int numero, i, flag;
+
+    while (1) {
+        flag = 1;
+        // Solicita ao usuário que insira um número
+        printf("Digite um número (digite -1 para sair): ");
+        scanf("%d", &numero);
+
+        // Verifica se o usuário digitou -1 para sair do loop
+        if (numero == -1) break;
+
+        if (numero <= 1){
+        	printf("%d não é primo\n", numero);  // Números menores ou iguais a 1 não são primos
+        } else {
+            for (i = 2; i * i <= numero; i++) {
+                if (numero % i == 0){
+                    flag = 0;
+                    break;
+                }
+            }
+            if (flag){
+                printf("%d é primo\n", numero);
+            } else {
+                printf("%d não é primo\n", numero);
+            }
+        }
+    }
+    return 0;
+}
+
+// SOMA LINHAS E COLUNA E DIZ SE É PAR OU IMPAR
+#include <stdio.h>
+#define ROWS 10
+#define COLS 15
+
+// Função para verificar se um número é par ou ímpar
+const char* isEvenOrOdd(int num) {
+    return (num % 2 == 0) ? "Par" : "Ímpar";
+}
+
+int main() {
+    int MAT[ROWS][COLS];
+    int rowSums[ROWS] = {0};
+    int colSums[COLS] = {0};
+
+    // Solicita ao usuário para fornecer os elementos da matriz
+    printf("Digite os elementos da matriz (%d x %d):\n", ROWS, COLS);
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("Elemento [%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &MAT[i][j]);
+            rowSums[i] += MAT[i][j];
+            colSums[j] += MAT[i][j];
+        }
+    }
+
+    // Exibe a matriz
+    printf("\nMatriz MAT:\n");
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%3d ", MAT[i][j]);
+        }
+        printf("\n");
+    }
+
+    // Exibe a soma dos elementos de cada linha e se é par ou ímpar
+    printf("\nSoma dos elementos de cada linha e se é par ou ímpar:\n");
+    for (int i = 0; i < ROWS; i++) {
+        printf("Linha %d: Soma = %d (%s)\n", i + 1, rowSums[i], isEvenOrOdd(rowSums[i]));
+    }
+
+    // Exibe a soma dos elementos de cada coluna e se é par ou ímpar
+    printf("\nSoma dos elementos de cada coluna e se é par ou ímpar:\n");
+    for (int j = 0; j < COLS; j++) {
+        printf("Coluna %d: Soma = %d (%s)\n", j + 1, colSums[j], isEvenOrOdd(colSums[j]));
+    }
+
+    return 0;
+}
+
+
+// Ler um vetor de 10 elementos inteiros e positivos. Criar um segundo vetor da seguinte forma: os
+// elementos de índice par receberão os respectivos elementos divididos por 2; os elementos de índice
+// ímpar receberão os respectivos elementos multiplicados por 3. Imprima os dois vetores.
+#include <stdio.h>
+
+int main() {
+    int vetor1[10];
+    int vetor2[10];
+
+    // Ler os elementos do vetor1
+    printf("Digite 10 elementos inteiros e positivos:\n");
+    for(i = 1; i <= 10 && i > -1; i++) {
+        scanf("%d", &vetor1[i]);
+        // Verifica se o número é positivo
+        if(vetor1[i] <= 0) {
+            printf("Por favor, insira apenas números inteiros positivos.\n");
+            i--; // Solicita novamente o mesmo índice
+        }
+    }
+
+    // Criar o vetor2 com base nas regras especificadas
+    for(i = 0; i < 10; i++) {
+        if(i % 2 == 0) {
+            vetor2[i] = vetor1[i] / 2;
+        } else {
+            vetor2[i] = vetor1[i] * 3;
+        }
+    }
+
+    // Imprimir os vetores
+    printf("\nVetor1: ");
+    for(i = 0; i < 10; i++) {
+        printf("%d ", vetor1[i]);
+    }
+
+    printf("\nVetor2: ");
+    for(i = 0; i < 10; i++) {
+        printf("%d ", vetor2[i]);
+    }
+
+    return 0;
+}
+
+// Faça um programa que lê 10 números inteiros do teclado e armazene em um vetor.
+// Ao final imprima o vetor armazenado nos dois sentidos.
+#include <stdio.h>
+
+int main() {
+    int vetor[10];
+
+    // Ler os 10 números inteiros e armazenar no vetor
+    printf("Digite 10 números inteiros:\n");
+    for(i = 0; i < 10; i++) {
+        scanf("%d", &vetor[i]);
+    }
+
+    // Imprimir o vetor do início para o fim
+    printf("\nVetor do início para o fim: ");
+    for(i = 0; i < 10; i++) {
+        printf("%d ", vetor[i]);
+    }
+
+    // Imprimir o vetor do fim para o início
+    printf("\nVetor do fim para o início: ");
+    for(i = 9; i >= 0; i--) {
+        printf("%d ", vetor[i]);
+    }
+
+    return 0;
+}
+
+#include <stdio.h>
+int main(){
+    int a, b, c, soma;
+    a = 1;
+    b = 10;
+    c = 3;
+    soma = a + b + c;
+    printf("%d", soma);
+}
+
+// Lê um vetor e escreve-o na tela.
+#include <stdio.h>
+#define N 5
+
+int main(){
+    int a[N], i;
+    for (i=0; i<N; i++){
+        scanf("%d", &a[i]);
+    }
+    for (i=0; i<N; i++){
+        printf("%d", a[i]);
+    }
+    return 0;
+}
+
+#include <stdio.h>
+
+int main() {
+    int vetor1[10];
+    int vetor2[10];int i;
+
+    for(i = 0; i < 10; i++) {
+        if(i % 2 == 0) {
+            printf("par");
+        } else {
+            printf("impar");
+        }
+    }
+}
+
+
+#include <stdio.h>
+int vetor1 = 77777;
+int print(){
+    //printf("\n%d\n", vetor1);
+    return vetor1;
+}
+int a = 10;
+int main() {
+    int vetor1[10];
+    int vetor2[10];int i;
+
+    // Ler os elementos do vetor1
+    printf("Digite 10 elementos inteiros e positivos:\n");
+    for(i = 0; i < 10; i++) {
+        scanf("%d", &vetor1[i]);
+        // Verifica se o número é positivo
+        if(vetor1[i] <= 0) {
+            printf("Por favor, insira apenas números inteiros positivos.\n");
+            i--; // Solicita novamente o mesmo índice
+        }
+    }
+
+    // Criar o vetor2 com base nas regras especificadas
+    for(i = 0; i < 10; i++) {
+        if(i % 2 == 0) {
+            vetor2[i] = vetor1[i] / 2;
+        } else {
+            vetor2[i] = vetor1[i] * 3;
+        }
+    }
+
+    // Imprimir os vetores
+    printf("\nVetor1: ");
+    for(i = 0; i < 10; i++) {
+        printf("%d ", vetor1[i]);
+    }
+
+    printf("\nVetor2: ");
+    for(i = 0; i < 10; i++) {
+        printf("%d ", vetor2[i]);
+    }
+    printf("%d", print());
+    return 0;
+}
+
+#include <stdio.h>
+int vetor1 = 77777;
+int print(){
+    //printf("\n%d\n", vetor1);
+    return vetor1;
+}
+int a = 10;
+int main() {
+    int i;
+    int c[10];
+    c[1] = 1*90-4;
+    int a = 0;
+	for (i=0;i<4;i++){
+        if (i%2==0)
+        	printf("%d\n", i);
+        a = 2 + a;
+        printf("oi\n");
+    }
+    printf("%d%d\n", a, c[1]);
+    printf("%d\n", print());
+    return 0;
+}
+
+#include <stdio.h>
+int soma(int a, int b, int c){
+    return a+b+c;
+}
+
+int main(){
+    int somar, a[10], b;
+    scanf("%d%d", &a[2*2], &b);
+    somar = soma(soma(soma(20, 30, 70), 20, 20), 10, 20);
+    printf("%d\n", somar);
+    printf("%d\n", b);
+    printf("%d\n", a[2]);
+    return 0;
+}
+
+#include <stdio.h>
+int main() {
+    int a, i, j;
+    for (i=0;i<10;i++)
+        for (j=0;j<10;j++)
+            if ((i+j)%2==0)
+                if ((i+j)%4==0)
+                	printf("%d + %d = %d é multiplo de 4\n", i, j, i+j);
+    			else
+                    printf("%d + %d = %d não é multiplo de 4\n", i, j, i+j);
+    		else
+                printf("%d + %d = %d é impar\n", i, j, i+j);
+   	printf("%d", a);
+    return 0;
+}
+
+#include <stdio.h>
+
+int main() {
+    int a[4][4], c[4];
+    c[2] = 1;
+    a[1][1] = 1;
+    int b = 1;
+    a[2][2] = a[a[c[b+1]][b]][0+1]      ;                   // Então, a[2] = 1
+    printf("%d\n", a[2][2]);    // Imprime 1
+
+    return 0;
+}
+
+
+#include <stdio.h>
+
+// Função recursiva para calcular o fatorial
+int fatorial(int n) {
+    if (n == 0 || n == 1) {
+        return 1;  // Caso base: fatorial de 0 ou 1 é 1
+    } else {
+        return n * fatorial(n - 1);  // Passo recursivo
+    }
+}
+
+int main() {
+    int numero;
+
+    // Solicita ao usuário para inserir um número
+    printf("Digite um número inteiro: ");
+    int a;
+    scanf("%d %d", &numero, &a);
+
+    // Calcula e exibe o fatorial
+    printf("O fatorial de %d é: %d\n", numero, fatorial(numero));
+
+    printf("%d", a);
+
+    return 0;
+}
+
+#include <stdio.h>
+
+int main() {
+    int matriz[3][3];
+    int somaDiagonalPrincipal = 0;
+    int multiplicacaoDiagonalSecundaria = 1;
+	int i, j;
+    // Leitura da matriz 3x3
+    printf("Digite os elementos da matriz 3x3:\n");
+    for ( i = 0; i < 3; i++) {
+        for ( j = 0; j < 3; j++) {
+            printf("Elemento [%d][%d]: ", i, j);
+            scanf("%d", &matriz[i][j]);
+        }
+    }
+
+    // Calculando a soma da diagonal principal e a multiplicação da diagonal secundária
+    for ( i = 0; i < 3; i++) {
+        somaDiagonalPrincipal += matriz[i][i];                  // Diagonal principal
+        multiplicacaoDiagonalSecundaria *= matriz[i][2 - i];    // Diagonal secundária
+    }
+
+    // Exibindo os resultados
+    printf("\nSoma da diagonal principal: %d\n", somaDiagonalPrincipal);
+    printf("Multiplicação da diagonal secundária: %d\n", multiplicacaoDiagonalSecundaria);
+
+    return 0;
+}
+
+
+
+#include <stdio.h>
+int escreve(int i, int j){
+    printf("%d %d\n", i, j);
+    return 0;
+}
+
+
+int main(){
+    int a = 1;
+    int b = 0;
+    int c = 30;
+    int i, j, k;
+  	for (i=0; i<30; i++){
+        j = 30;
+   		do
+            escreve(i, j--);
+        while (j>0);
+    }
+
+    return 0;
+}
+
+
+#include <stdio.h>
+void escreve(int i, int j){
+    printf("%d %d\n", i, j);
+}
+
+
+int main(){
+    int a = 1;
+    int b = 0;
+    int c = 30;
+    int i, j, k;
+  	for (i=0; i<30; i++){
+        j = 30;
+   		do
+            escreve(i, j--);
+        while (j>0);
+    }
+
+    return 0;
+}

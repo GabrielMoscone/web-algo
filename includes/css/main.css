@@ -1,0 +1,122 @@
+.row {
+    --bs-gutter-x: 0;
+}
+
+@media (min-width: 576px) {
+    .CodeMirror {
+      width: 100%; /* Ocupa toda a largura disponível */
+      height: calc(100vh - 350px); /* Altura total da janela menos 50px (para considerar um header ou margem) */
+    }
+}
+
+body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            height: 100vh;
+            /*display: flex;*/
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden; /* Impede o scroll na página */
+        }
+
+/* Estilo para o marcador de breakpoint */
+.CodeMirror-gutter-elt.breakpoints {
+    cursor: pointer;
+}
+
+div.execution,
+div.text-editor {
+    margin-bottom: 10px;
+}
+
+div.execution div.button{
+    text-align: right;
+}
+
+div.console div.text-console textarea,
+div.console div.text-console input {
+    width: 90%;
+    resize: none;
+}
+
+div#tela_aguarde {
+    background-color: rgba(200, 200, 200, 0.9);
+    display: none;
+    height: 100vh;
+    left: 0;
+    opacity: 1;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 99999;
+    font-size: 20px;
+}
+
+div#tela_aguarde .cont_anima {
+    margin-top: -4em;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+
+div#tela_aguarde .spinner-border {
+    color: #0038ac;
+}
+
+div#tela_aguarde p#aguarde_msg {
+    font-weight: 501;
+    margin-top: 0.3rem;
+    color: #0b0b0b;
+    text-shadow: none;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+.table-container {
+    max-height: 235px; /* Altura máxima da tabela */
+    overflow-y: auto; /* Habilita o scroll vertical */
+    overflow-x: auto; /* Habilita o scroll horizontal */
+    border: 1px solid #ddd;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+}
+thead {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+th, td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.input-insere-dados{
+    background-color: #ebf3d6;
+}
+
+.line-decoration {
+  background-color: rgba(213, 213, 179, 0.25); /* Example decoration: change background color */
+}
+
+/* Fixando a segunda coluna */
+        th:nth-child(2),
+        td:nth-child(2) {
+            position: sticky;
+            left: 0;
+            background-color: #f2f2f2;
+            z-index: 1; /* Garante que a segunda coluna fique acima do restante */
+        }
+
+
+.modal {
+    overflow: auto;
+}

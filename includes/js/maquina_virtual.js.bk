@@ -1,0 +1,29 @@
+// Executa código intermediário de três endereços gerado pelo compilador
+var regexIdentificador = /[a-zA-Z_]\w*/;
+
+function verifica_operador(expressao){
+    let quebra_expressao;
+    if (expressao.includes('*')){
+        quebra_expressao = expressao.split('*');
+        return quebra_expressao[0], '*', quebra_expressao[1];
+    }
+}
+
+function executaC3E(codigo_c3e){
+    let c3e;
+    let quebra_c3e;
+    let identificador;
+    let expressao;
+    let arg1;
+    let arg2;
+    let op;
+    for (let i=0; i<codigo_c3e.length; i++){
+        c3e = codigo_c3e[i];
+        if (regexIdentificador.test(c3e[0])){
+            quebra_c3e = c3e.split('=');
+            identificador = quebra_c3e[0];
+            expressao = quebra_c3e[1];
+            arg1, op, arg2 = verifica_operador(expressao);
+        }
+    }
+}
