@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C-Compiler Web</title>
+  <!-- Inclua o CSS do CodeMirror -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
+  <!-- Escolha um dos temas do CodeMirror -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/theme/dracula.min.css">
+  <!-- Addon for Autocomplete -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/show-hint.min.css">
+  <!-- Boostratp 5.3.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Material Icon -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="includes/css/main.css">
+  <link rel="icon" type="image/png" href="includes/media/favicon-32x32.png">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <script>
+    function mostra_tela_aguarde(msg) {
+      "use strict";
+      if (msg == undefined) {
+        msg = '';
+      }
+      $('#aguarde_msg').html(msg);
+      $('#tela_aguarde').css('display', 'block');
+    }
+
+    function esconde_tela_aguarde() {
+      "use strict";
+      $('#tela_aguarde').css('display', 'none');
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">WebAlgo</a>
+
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-toggle="modal"
+          data-bs-target="#buscarAlgoritmoModal">Algoritmo</a>
+        <svg class="bi" width="24" height="24" role="img" aria-label="Buscar">
+          <use xlink:href="#search-icon" />
+        </svg>
+        </a>
+        <a class="nav-link" href="#">Informações</a>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-light" id="button6" hidden onclick="retira_depuracao()">Continuar sem
+          depuração</button>
+        <button type="button" class="btn btn-success" id="button5" hidden>Próximo passo</button>
+
+        <button class="btn btn-debug" id="button4" onclick="inicia_worker(true)">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+            <path
+              d="M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z" />
+          </svg>
+          Debug
+        </button>
+
+        <button class="btn btn-run" id="button2" onclick="inicia_worker()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          Executar
+        </button>
+
+        <button type="button" class="btn btn-danger" id="button3" onclick="cancelarExecucao()" title="Cancelar execução"
+          hidden>Cancelar</button>
+        <div class="user-avatar">U</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <main class="main-layout">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="panel-tabs">
+        <ul class="nav nav-tabs" id="leftPanelTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="questao-tab" data-bs-toggle="tab" data-bs-target="#questao"
+              type="button" role="tab">
+              Questão
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="variaveis-tab" data-bs-toggle="tab" data-bs-target="#variaveis" type="button"
+              role="tab">
+              Variáveis
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="c3e-tab" data-bs-toggle="tab" data-bs-target="#c3e" type="button" role="tab"
+              onclick="exibe_c3e()">
+              C3E
+            </button>
+          </li>
+
+          <!-- Mobile only tabs -->
+          <li class="nav-item d-md-none" role="presentation">
+            <button class="nav-link" id="codigo-tab" data-bs-toggle="tab" data-bs-target="#codigo" type="button"
+              role="tab">
+              Código
+            </button>
+          </li>
+          <li class="nav-item d-md-none" role="presentation">
+            <button class="nav-link" id="resposta-tab" data-bs-toggle="tab" data-bs-target="#resposta" type="button"
+              role="tab">
+              Resposta
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tab-content flex-fill">
+        <!-- Questão Tab -->
+        <div class="tab-pane fade show active" id="questao" role="tabpanel">
+          <div class="question-content">
+            <div class="question-title" id="question">
+              1 - Faça uma programa que leia dois valores, realize a soma dos valores lidos e escreva o resultado.
+            </div>
+
+            <div class="example-section">
+              <h6>Exemplo de entrada</h6>
+              <div class="example-text">1<br>2 3 4 5 6</div>
+            </div>
+
+            <div class="example-section">
+              <h6>Exemplo de saída</h6>
+              <div class="example-text">2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Variáveis Tab -->
+        <div class="tab-pane fade" id="variaveis" role="tabpanel">
+          <div class="variables-content">
+            <div style="margin-bottom: 1rem;">
+              <a href="#" onclick="carrega_historico_variaveis(); return false;"
+                style="color: var(--accent-green); text-decoration: none;">Exibir histórico de variáveis</a>
+            </div>
+            <table class="table variables-table" id="tabela_variaveis">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Variável</th>
+                  <th style="text-align: right;">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="3" style="text-align: center; color: var(--text-secondary);">Nenhuma variável encontrada
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- C3E Tab -->
+        <div class="tab-pane fade" id="c3e" role="tabpanel">
+          <div class="c3e-content" id="c3eContent">
+            <div id="id_p_c3e" style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+              Execute o código para gerar o C3E
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Código Tab -->
+        <div class="tab-pane fade d-md-none" id="codigo" role="tabpanel"></div>
+
+        <!-- Mobile Resposta Tab -->
+        <div class="tab-pane fade d-md-none" id="resposta" role="tabpanel"></div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel d-none d-md-flex">
+      <!-- Desktop Layout -->
+      <div class="desktop-right-layout"></div>
+    </div>
+
+    <!-- Containers únicos -->
+    <div id="code-container" class="code-editor-container">
+      <textarea id="code">/* Compilador WebAlgo Web */
+int main(){
+    /* Desenvolva seu código C aqui! */
+    return 0;
+}</textarea>
+    </div>
+
+    <div id="console-container" class="console-container">
+      <textarea class="console-output" id="displayText" readonly>Pronto para executar...</textarea>
+      <input type="text" id="inputText" class="console-input" placeholder="Digite aqui..." disabled>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="tela_aguarde">
+      <div class="loading-spinner"></div>
+      <div>Compilando...</div>
+      <button type="button" class="btn btn-outline-danger" onclick="cancelarExecucao()">Cancelar</button>
+    </div>
+
+    <!-- Modal Selecionar Algoritmo -->
+    <div class="modal fade" id="buscarAlgoritmoModal" tabindex="-1" aria-labelledby="buscarAlgoritmoLabel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="buscarAlgoritmoLabel">Selecionar o algoritmo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="tipoAlgoritmo" class="form-label">Tipo</label>
+              <select class="form-select" id="tipoAlgoritmo">
+                <option selected>Sequencial</option>
+                <option>Condicional</option>
+                <option>Iterativo</option>
+                <option>Vetores</option>
+                <option>Matrizes</option>
+                <option>Funções</option>
+                <option>Recursividade</option>
+                <option>Geral</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="problemas" class="form-label">Problema</label>
+              <select class="form-select" id="problemas">
+                <option selected>G00000001</option>
+                <option>G00000002</option>
+                <option>G00000003</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Carregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Histórico de Variáveis -->
+    <div class="modal fade" id="modal_historico_variaveis" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Histórico de Variáveis</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              style="filter: invert(1);"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table variables-table" id="tabela_historico_variaveis_modal">
+              <thead>
+                <tr>
+                  <th scope="col" style="text-align: center">#</th>
+                  <th scope="col">Variável</th>
+                  <th scope="col" style="text-align: right; padding-right: 15px;">Histórico (do mais antigo para o
+                    mais
+                    recente)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="3" style="text-align: center; color: var(--text-secondary);">Nenhum histórico
+                    disponível
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inclua o script do CodeMirror -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
+    <!-- Inclua os modos desejados (no exemplo, C) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/clike/clike.min.js"></script>
+    <!-- Inclua o complemento para preenchimento automático de chaves -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/edit/closebrackets.min.js"></script>
+    <!-- Addon for Autocomplete -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/show-hint.min.js"></script>
+    <!-- Addon for C Hinting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/anyword-hint.min.js"></script>
+    <!-- Bootstrap 5.3.3 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+    <!-- Arquivo JS do programa -->
+    <!--            <script src="includes/js/worker.js"></script>-->
+    <!--            &lt;!&ndash; Arquivo JS do programa léxico &ndash;&gt;-->
+    <!--            <script src="includes/js/clexico.js"></script>-->
+    <!--            &lt;!&ndash; Arquivo JS do programa sintático &ndash;&gt;-->
+    <!--            <script src="includes/js/csintatico.js"></script>-->
+    <!--            &lt;!&ndash; Arquivo JS do programa maquina virtual para execução do C3E &ndash;&gt;-->
+    <!--            <script src="includes/js/maquina_virtual.js"></script>-->
+    <!--            <script src="includes/js/maquina_virtual_2.js"></script>-->
+    <!--            <script src="includes/js/funcoes_mv.js"></script>-->
+    <script src="includes/js/main.js"></script>
+    <script src="includes/js/resize.js"></script>
+    </div>
+  </main>
+
+
+  <script>
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+    // Função para salvar os dados no localStorage
+    function saveDataAndReload(reload = true) {
+      const codigo_fonte = editor.getValue();
+      localStorage.setItem('codigo_fonte', codigo_fonte);
+      if (reload) {
+        location.reload();
+      }
+    }
+
+    // Função para restaurar os dados do localStorage
+    function restoreData() {
+      const codigo_fonte = localStorage.getItem('codigo_fonte');
+      const compilar = localStorage.getItem('compilar');
+      editor.setValue(codigo_fonte);
+    }
+    window.onload = restoreData;
+
+    function fecha_modal(id_modal) {
+      $("#" + id_modal).modal('hide');
+    }
+
+    // Inicialize o CodeMirror no textarea com o ID "code"
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      lineNumbers: true, // Mostrar números de linha
+      mode: "text/x-csrc", // Definir o modo do editor como C
+      theme: "dracula", // Escolher o tema do editor
+      autoCloseBrackets: true, // Ativar o preenchimento automático de chaves
+      indentUnit: 4, // Definir o número de espaços em branco para a tecla Tab e para o recuo
+      tabSize: 4, // Definir o tamanho do Tab como quatro espaços em branco
+      height: "30em", // Definir a altura do editor para 30 linhas
+      extraKeys: {
+        "Ctrl-Space": "autocomplete",
+        "Ctrl-L": function () { // Definindo o atalho Ctrl + L
+          indentarTodoCodigo();
+        }
+      } // Trigger autocomplete
+    });
+    // editor.setSize(null, 400);
+
+    // Captura o elemento input e textarea
+    var inputElement = document.getElementById('inputText');
+    var textareaElement = document.getElementById('displayText');
+
+    // Adiciona um listener para o evento keypress
+    // inputElement.addEventListener('keypress', function(event) {
+    //     // Verifica se a tecla pressionada é Enter (código 13)
+    //     if (event.keyCode === 13 && inputElement.value !== '') {
+    //         // Adiciona o valor digitado ao textarea
+    //         textareaElement.value += inputElement.value + '\n';
+    //         // Limpa o input
+    //         inputElement.value = '';
+    //         // Rola o textarea para o final
+    //         textareaElement.scrollTop = 100000000;
+    //     }
+    // });
+
+    // Provide hinting for C
+    CodeMirror.registerHelper("hint", "c", function (editor) {
+      var completions = [
+        "break", "case", "char", "continue", "do", "double", "else",
+        "float", "for", "goto", "if", "int", "long", "return",
+        "sizeof", "switch", "void", "while"
+      ];
+      var cur = editor.getCursor();
+      var token = editor.getTokenAt(cur);
+      var start = token.start, end = cur.ch;
+      var prefix = token.string;
+      var list = completions.filter(function (completion) {
+        return completion.startsWith(prefix);
+      });
+      return { list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end) };
+    });
+
+    // Função para alternar breakpoint em uma linha
+    function toggleBreakpoint(line) {
+      var info = editor.lineInfo(line);
+      if (info.text.replace(' ', '') !== '') {
+        if (!info.gutterMarkers) {
+          editor.setGutterMarker(line, "CodeMirror-linenumbers", makeMarker());
+        } else {
+          editor.setGutterMarker(line, "CodeMirror-linenumbers", null);
+        }
+      }
+    }
+
+    // Função para criar um marcador de breakpoint
+    function makeMarker() {
+      var marker = document.createElement("div");
+      marker.style.color = "#822";
+      marker.innerHTML = "●";
+      return marker;
+    }
+
+    // Ouvinte de evento para clicar na gutter (área do número de linha)
+    editor.on("gutterClick", function (cm, line, gutter) {
+      console.log(gutter);
+      if (gutter === "CodeMirror-linenumbers") {
+        toggleBreakpoint(line);
+      }
+    });
+
+    document.getElementById('inputText').addEventListener('input', function (e) {
+      // Expressão regular para permitir apenas números, ponto e sinal negativo
+      const validPattern = /^-?[0-9]*\.?[0-9]*$/;
+
+      // Verifica se o valor atual é válido
+      if (!validPattern.test(this.value)) {
+        // Remove o último caractere se não for válido
+        this.value = this.value.slice(0, -1);
+      }
+
+      // Evita múltiplos pontos consecutivos, múltiplos sinais negativos, ou ponto após o sinal negativo
+      const firstChar = this.value.charAt(0);
+      if ((this.value.match(/\./g) || []).length > 1 || (this.value.match(/-/g) || []).length > 1 || (firstChar === '-' && this.value.charAt(1) === '.')) {
+        this.value = this.value.slice(0, -1);
+      }
+    });
+
+    function addLineDecoration(line, className) {
+      editor.addLineClass(line, 'wrap', className);
+    }
+
+    function retira_depuracao() {
+      return true;
+      // debug_compiler = false;
+      // let count = 0;
+      // $("#button5")[0].hidden = true;
+      // $("#button6")[0].hidden = true;
+      // editor.eachLine(function(lineHandle) {
+      //     // Remove all classes from the line
+      //     editor.removeLineClass(count, 'wrap', 'line-decoration');
+      //     count++;
+      // });
+    }
+
+    function cancelarExecucao() {
+      saveDataAndReload();
+    }
+
+    function exibe_c3e() {
+      if ('c3e' in dic_control && dic_control['c3e']) {
+        $("#id_p_c3e")[0].innerText = dic_control['c3e'];
+      }
+    }
+    let lista_breakpoints = []
+    editor.on("gutterClick", function (cm, linha) {
+      let index = lista_breakpoints.indexOf(linha + 1);
+      if (index !== -1) {
+        lista_breakpoints.splice(index, 1);
+      } else {
+        lista_breakpoints.push(linha + 1);
+      }
+
+    });
+
+    function indentarTodoCodigo() {
+      const totalLinhas = editor.lineCount();
+      for (let i = 0; i < totalLinhas; i++) {
+        editor.indentLine(i, "smart");
+      }
+    }
+
+    if (!localStorage.getItem('clientId')) {
+      localStorage.setItem('clientId', crypto.randomUUID());
+    }
+    const clientId = localStorage.getItem('clientId');
+  </script>
+</body>
+
+</html>

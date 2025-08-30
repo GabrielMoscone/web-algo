@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: ./web-algo
+    ports:
+      - "3000:80"
+    depends_on:
+      - nginx
+
+  middleware1:
+    build: ./middleware
+    container_name: middleware1
+    expose:
+      - "8080"
+
+  middleware2:
+    build: ./middleware
+    container_name: middleware2
+    expose:
+      - "8080"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8088:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - middleware1
+      - middleware2
