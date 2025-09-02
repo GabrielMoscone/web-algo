@@ -29,7 +29,7 @@ public class LegacyAuthClient implements AuthenticationPort {
     public Mono<LoginResult> authenticate(LoginCommand command) {
         LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("username", command.username());
-        form.add("currentPassword", command.password());
+        form.add("password", command.password());
 
         return client.post()
                 .uri("/logUsuario")
@@ -50,7 +50,7 @@ public class LegacyAuthClient implements AuthenticationPort {
     public Mono<LogoutResult> invalidateSession(LogoutCommand command) {
         LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("username", "nada");
-        form.add("currentPassword", "nada");
+        form.add("password", "nada");
 
         return client.post()
                 .uri("/logoutPortal")
@@ -101,7 +101,7 @@ public class LegacyAuthClient implements AuthenticationPort {
         form.add("login", command.username());
         form.add("senha1", command.currentPassword());
         form.add("senha2", command.newPassword());
-        form.add("senha3", command.confirmPassword());
+        form.add("senha3", command.newPassword());
 
         return client.post()
                 .uri("/alteraSenhap")

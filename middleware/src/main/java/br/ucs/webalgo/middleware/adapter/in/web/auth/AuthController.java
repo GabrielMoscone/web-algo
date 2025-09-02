@@ -14,10 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -56,15 +53,15 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Mono<ResponseEntity<LogoutResponse>> logout(@RequestBody @Validated LogoutRequest req) {
-        LogoutCommand command = logoutMapper.toCommand(req);
+    public Mono<ResponseEntity<LogoutResponse>> logout(@RequestBody @Validated LogoutRequest req,
+                                                       @CookieValue("sessionid") String sessionId) {
+        LogoutCommand command = logoutMapper.toCommand(req, sessionId);
         return authUseCase.logout(command)
                 .map(result -> {
                     LogoutResponse body = logoutMapper.toResponse(result);
-                    ResponseEntity.BodyBuilder resp = ResponseEntity.ok();
-
-                    resp.header(HttpHeaders.SET_COOKIE, "sessionid=; Path=/; Max-Age=0");
-                    return resp.body(body);
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.SET_COOKIE, "sessionid=; Path=/; Max-Age=0") // invalida cookie
+                            .body(body);
                 });
     }
 

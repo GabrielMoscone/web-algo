@@ -9,8 +9,6 @@ public class ChangePasswordRequest {
     private String currentPassword;
     @NotBlank
     private String newPassword;
-    @NotBlank
-    private String confirmPassword;
 
     public String getUsername() {
         return username;
@@ -34,13 +32,5 @@ public class ChangePasswordRequest {
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 }

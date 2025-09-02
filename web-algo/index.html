@@ -35,6 +35,11 @@
       }
     }
   </style>
+  
+  <script type="module">
+    import { isAuthenticated } from './includes/js/auth/auth.js';
+    if (!isAuthenticated()) location.replace('login.html');
+  </script>
   <script>
     function mostra_tela_aguarde(msg) {
       "use strict";
@@ -59,8 +64,8 @@
       <a class="navbar-brand" href="#">WebAlgo</a>
 
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-toggle="modal"
-          data-bs-target="#buscarAlgoritmoModal">Algoritmo</a>
+        <a class="nav-link" href="#" data-bs-toggle="modal"
+           data-bs-target="#buscarAlgoritmoModal">Algoritmo</a>
         <svg class="bi" width="24" height="24" role="img" aria-label="Buscar">
           <use xlink:href="#search-icon" />
         </svg>
@@ -90,7 +95,27 @@
 
         <button type="button" class="btn btn-danger" id="button3" onclick="cancelarExecucao()" title="Cancelar execução"
           hidden>Cancelar</button>
-        <div class="user-avatar">U</div>
+        <!-- User avatar + dropdown -->
+        <div class="dropdown">
+          <button class="btn p-0 border-0 d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false"
+                  aria-label="User menu">
+            <!-- Bolinha U -->
+            <span class="d-inline-flex justify-content-center align-items-center rounded-circle"
+                  style="width:32px;height:32px;background:#e9ecef;color:#212529;font-weight:600;">
+      U
+    </span>
+            <!-- Setinha para baixo -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1"
+                 viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown -->
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li><a class="dropdown-item" id="logoutBtn" href="#">Sign out</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -326,7 +351,6 @@ int main(){
     <!--            <script src="includes/js/funcoes_mv.js"></script>-->
     <script src="includes/js/main.js"></script>
     <script src="includes/js/resize.js"></script>
-    </div>
   </main>
 
 
@@ -502,6 +526,7 @@ int main(){
     }
     const clientId = localStorage.getItem('clientId');
   </script>
+  <script type="module" src="includes/js/auth/appGuard.js"></script>
 </body>
 
 </html>

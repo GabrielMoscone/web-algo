@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogoutMapper {
 
-    public LogoutCommand toCommand(LogoutRequest req) {
-        return new LogoutCommand(req.getUsername(), req.getSessionId());
+    public LogoutCommand toCommand(LogoutRequest req, String sessionId) {
+        return new LogoutCommand(req.getUsername(), sessionId);
     }
 
     public LogoutResponse toResponse(LogoutResult res) {
