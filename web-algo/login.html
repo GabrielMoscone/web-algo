@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Login — WebAlgo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .ucs-logo {
+            display: block;
+            margin: 0 auto 20px auto;
+            max-width: 180px;
+        }
+        .btn-primary {
+            background-color: #004C97; /* azul UCS */
+            border-color: #004C97;
+        }
+        .btn-primary:hover {
+            background-color: #003366;
+            border-color: #003366;
+        }
+        .btn-secondary {
+            background-color: #E2231A; /* vermelho UCS */
+            border-color: #E2231A;
+        }
+        .btn-secondary:hover {
+            background-color: #B51B14;
+            border-color: #B51B14;
+        }
+        .btn-gray {
+            background-color: #6c757d; /* cinza padrão Bootstrap */
+            border-color: #6c757d;
+            color: #fff !important; /* força texto branco */
+        }
+        .btn-gray:hover {
+            background-color: #565e64; /* cinza mais escuro */
+            border-color: #565e64;
+            color: #fff !important; /* mantém branco no hover */
+        }
+    </style>
+
+</head>
+<body class="bg-light d-flex align-items-center" style="min-height:100vh">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <img src="./includes/media/Logo_UCS_Vertical_PNG.png" alt="UCS" class="ucs-logo">
+                    <h2 class="text-center fw-bold mb-4" style="color:#004C97">WebAlgo</h2>
+
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label">Usuário</label>
+                            <input id="username" class="form-control" required autocomplete="username">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Senha</label>
+                            <div class="input-group">
+                                <input id="password" type="password" class="form-control" required autocomplete="current-password">
+                                <button class="btn btn-outline-secondary" type="button" id="login_pwd_eye" aria-label="Mostrar/ocultar">👁</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Entrar</button>
+                    </form>
+
+                    <!-- Botões extras -->
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-gray w-50" data-bs-toggle="modal" data-bs-target="#changePwdModal">
+                            Alterar senha
+                        </button>
+                        <button class="btn btn-secondary w-50" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            Registrar usuário
+                        </button>
+                    </div>
+
+                    <div id="err" class="text-danger small mt-2" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Alterar Senha -->
+<div class="modal fade" id="changePwdModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" id="changePwdForm">
+            <div class="modal-header">
+                <h5 class="modal-title">Alterar Senha</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label class="form-label">Usuário</label>
+                    <input id="cp_username" class="form-control" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Senha atual</label>
+                    <div class="input-group">
+                        <input id="cp_old" type="password" class="form-control" required>
+                        <button class="btn btn-outline-secondary" type="button" id="cp_old_eye" aria-label="Mostrar/ocultar">
+                            👁
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Nova senha (7–10)</label>
+                    <div class="input-group">
+                        <input id="cp_new" type="password" minlength="7" maxlength="10" class="form-control" required>
+                        <button class="btn btn-outline-secondary" type="button" id="cp_new_eye" aria-label="Mostrar/ocultar">
+                            👁
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Repetir nova senha (7–10)</label>
+                    <div class="input-group">
+                        <input id="cp_new2" type="password" minlength="7" maxlength="10" class="form-control" required>
+                        <button class="btn btn-outline-secondary" type="button" id="cp_new2_eye" aria-label="Mostrar/ocultar">
+                            👁
+                        </button>
+                    </div>
+                </div>
+                <div id="cp_err" class="text-danger small mt-2" style="display:none"></div>
+                <div id="cp_ok" class="text-success small mt-2" style="display:none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Alterar</button>
+                <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Registrar Usuário -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form class="modal-content" id="registerForm">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Primeiro nome</label>
+                        <input id="rg_first" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Último nome</label>
+                        <input id="rg_last" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Login (7–10)</label>
+                        <input id="rg_login" minlength="7" maxlength="10" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">E-mail</label>
+                        <input id="rg_email" type="email" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quem é você?</label>
+                        <select id="rg_role" class="form-select" required>
+                            <option value="" selected disabled>Selecione…</option>
+                            <option value="ALUNO">Aluno</option>
+                            <option value="PROFESSOR">Professor</option>
+                            <option value="OUTRO">Outro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label d-block">Sexo</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="rg_sex" id="rg_m" value="M" checked>
+                            <label class="form-check-label" for="rg_m">Masculino</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="rg_sex" id="rg_f" value="F">
+                            <label class="form-check-label" for="rg_f">Feminino</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Cidade</label>
+                        <input id="rg_city" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Estado</label>
+                        <input id="rg_state" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Senha (7–10)</label>
+                        <div class="input-group">
+                            <input id="rg_pwd" type="password" minlength="7" maxlength="10" class="form-control" required>
+                            <button class="btn btn-outline-secondary" type="button" id="rg_pwd_eye">👁</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Repetir senha (7–10)</label>
+                        <div class="input-group">
+                            <input id="rg_pwd2" type="password" minlength="7" maxlength="10" class="form-control" required>
+                            <button class="btn btn-outline-secondary" type="button" id="rg_pwd2_eye">👁</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="rg_err" class="text-danger small mt-2" style="display:none"></div>
+                <div id="rg_ok" class="text-success small mt-2" style="display:none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Criar usuário</button>
+                <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="./includes/js/auth/login.js"></script>
+<script type="module" src="./includes/js/auth/change-password.js"></script>
+<script type="module" src="./includes/js/auth/signup.js"></script>
+<script type="module">
+    function attachEye(inputId, btnId) {
+        const input = document.getElementById(inputId);
+        const btn   = document.getElementById(btnId);
+        if (!input || !btn) return;
+        btn.addEventListener('click', () => {
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    }
+    attachEye('password', 'login_pwd_eye');
+    attachEye('cp_old',  'cp_old_eye');
+    attachEye('cp_new',  'cp_new_eye');
+    attachEye('cp_new2', 'cp_new2_eye');
+    attachEye('rg_pwd',  'rg_pwd_eye');
+    attachEye('rg_pwd2', 'rg_pwd2_eye');
+</script>
+</body>
+</html>

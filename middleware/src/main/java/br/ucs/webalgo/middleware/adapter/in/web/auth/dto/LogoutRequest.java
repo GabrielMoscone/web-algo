@@ -6,8 +6,6 @@ public class LogoutRequest {
 
     @NotBlank
     private String username;
-    @NotBlank
-    private String sessionId;
 
     public String getUsername() {
         return username;
@@ -17,11 +15,4 @@ public class LogoutRequest {
         this.username = username;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 }

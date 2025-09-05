@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class ChangePasswordMapper {
 
     public ChangePasswordCommand toCommand(ChangePasswordRequest req) {
-        return new ChangePasswordCommand(req.getUsername(), req.getCurrentPassword(), req.getNewPassword(), req.getConfirmPassword());
+        return new ChangePasswordCommand(req.getUsername(), req.getCurrentPassword(), req.getNewPassword());
     }
 
     public ChangePasswordResponse toResponse(ChangePasswordResult result) {
