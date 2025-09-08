@@ -19,10 +19,11 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="includes/css/main.css">
+  <link rel="stylesheet" href="includes/css/sidebar.css">
   <link rel="icon" type="image/png" href="includes/media/favicon-32x32.png">
   <style>
     .bd-placeholder-img {
-      font-size: 1.125rem;
+      font-size: 110%;
       text-anchor: middle;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -31,14 +32,14 @@
 
     @media (min-width: 768px) {
       .bd-placeholder-img-lg {
-        font-size: 3.5rem;
+        font-size: 300%;
       }
     }
   </style>
-  
+
   <script type="module">
     import { isAuthenticated } from './includes/js/auth/auth.js';
-    if (!isAuthenticated()) location.replace('login.html');
+    // if (!isAuthenticated()) location.replace('login.html');
   </script>
   <script>
     function mostra_tela_aguarde(msg) {
@@ -47,7 +48,7 @@
         msg = '';
       }
       $('#aguarde_msg').html(msg);
-      $('#tela_aguarde').css('display', 'block');
+      $('#tela_aguarde').css('display', 'flex');
     }
 
     function esconde_tela_aguarde() {
@@ -61,11 +62,20 @@
   <!-- Header -->
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">WebAlgo</a>
+
+      <button class="btn me-2 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+        aria-controls="offcanvasMenu">
+        <span>
+          <svg viewBox="0 0 30 30" width="24" height="24" stroke="var(--text-primary)" stroke-width="2">
+            <path d="M4 7h22M4 15h22M4 23h22" />
+          </svg>
+        </span>
+      </button>
+
+      <a class="navbar-brand d-none d-lg-block" href="#">WebAlgo</a>
 
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="#" data-bs-toggle="modal"
-           data-bs-target="#buscarAlgoritmoModal">Algoritmo</a>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#buscarAlgoritmoModal">Algoritmo</a>
         <svg class="bi" width="24" height="24" role="img" aria-label="Buscar">
           <use xlink:href="#search-icon" />
         </svg>
@@ -96,18 +106,18 @@
         <button type="button" class="btn btn-danger" id="button3" onclick="cancelarExecucao()" title="Cancelar execução"
           hidden>Cancelar</button>
         <!-- User avatar + dropdown -->
-        <div class="dropdown">
+        <div class="dropdown d-none d-md-flex">
           <button class="btn p-0 border-0 d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false"
-                  aria-label="User menu">
+            aria-label="User menu">
             <!-- Bolinha U -->
             <span class="d-inline-flex justify-content-center align-items-center rounded-circle"
-                  style="width:32px;height:32px;background:#e9ecef;color:#212529;font-weight:600;">
-      U
-    </span>
+              style="width:32px;height:32px;background:#e9ecef;color:#212529;font-weight:600;">
+              U
+            </span>
             <!-- Setinha para baixo -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1"
-                 viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z"/>
+              viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
             </svg>
           </button>
 
@@ -119,6 +129,69 @@
       </div>
     </div>
   </nav>
+
+  <!-- Offcanvas Menu -->
+  <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header" style="display: flex; justify-content: space-between;">
+      <h5 class="offcanvas-title" id="offcanvasMenuLabel">WebAlgo</h5>
+      <div type="button" class="btn-close-modal" data-bs-dismiss="offcanvas" aria-label="Close"><svg
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" stroke="var(--text-primary)" stroke-width="2"
+          stroke-linecap="round" style="width: 20px; height: 20px;">
+          <path d="M6 6 L24 24 M6 24 L24 6" />
+        </svg>
+      </div>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between">
+      <div>
+        <ul class="list-unstyled">
+          <li>
+            <a href="#" class="nav-link-custom">
+              <i class="material-symbols-outlined">login</i>
+              Entrar
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link-custom">
+              <i class="material-symbols-outlined">dashboard</i>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link-custom" data-bs-toggle="modal" data-bs-target="#buscarAlgoritmoModal">
+              <i class="material-symbols-outlined">school</i>
+              Exercícios
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link-custom">
+              <i class="material-symbols-outlined">info</i>
+              Informações
+            </a>
+          </li>
+        </ul>
+
+
+      </div>
+
+      <div class="text-center mt-auto">
+        <div class="accessibility-box">
+          <div class="font-size-container">
+            a
+            <input type="range" id="font-size-selector" class="form-range" min="0.5" max="2" step="0.1" value="1">
+            A
+          </div>
+
+          <div class="theme-container form-check form-switch mt-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch">
+            <label class="form-check-label" for="darkModeSwitch">Dark mode</label>
+          </div>
+        </div>
+
+        <img src="./includes/media/logo_ucs_horizontal.png" alt="UCS" style="max-width: 120px; margin-top: 4rem;">
+        <p class="small text-muted mt-2">© 2001–2025 Universidade de Caxias do Sul. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Layout -->
   <main class="main-layout">
@@ -150,12 +223,6 @@
             <button class="nav-link" id="codigo-tab" data-bs-toggle="tab" data-bs-target="#codigo" type="button"
               role="tab">
               Código
-            </button>
-          </li>
-          <li class="nav-item d-md-none" role="presentation">
-            <button class="nav-link" id="resposta-tab" data-bs-toggle="tab" data-bs-target="#resposta" type="button"
-              role="tab">
-              Resposta
             </button>
           </li>
         </ul>
@@ -216,10 +283,8 @@
         </div>
 
         <!-- Mobile Código Tab -->
-        <div class="tab-pane fade d-md-none" id="codigo" role="tabpanel"></div>
+        <div class="tab-pane fade d-md-none mobile-code-container" id="codigo" role="tabpanel"></div>
 
-        <!-- Mobile Resposta Tab -->
-        <div class="tab-pane fade d-md-none" id="resposta" role="tabpanel"></div>
       </div>
     </div>
 
@@ -248,7 +313,7 @@ int main(){
       <div class="loading-spinner"></div>
       <div>Compilando...</div>
       <button type="button" class="btn btn-outline-danger" onclick="cancelarExecucao()">Cancelar</button>
-    </div> 
+    </div>
 
     <!-- Modal Selecionar Algoritmo -->
     <div class="modal fade" id="buscarAlgoritmoModal" tabindex="-1" aria-labelledby="buscarAlgoritmoLabel">
@@ -384,7 +449,7 @@ int main(){
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       lineNumbers: true, // Mostrar números de linha
       mode: "text/x-csrc", // Definir o modo do editor como C
-      theme: "dracula", // Escolher o tema do editor
+      theme: "default", // Escolher o tema do editor
       autoCloseBrackets: true, // Ativar o preenchimento automático de chaves
       indentUnit: 4, // Definir o número de espaços em branco para a tecla Tab e para o recuo
       tabSize: 4, // Definir o tamanho do Tab como quatro espaços em branco
@@ -525,6 +590,43 @@ int main(){
       localStorage.setItem('clientId', crypto.randomUUID());
     }
     const clientId = localStorage.getItem('clientId');
+
+    // Font size selector
+    const range = document.getElementById('font-size-selector');
+    range.addEventListener('input', () => {
+      document.body.style.fontSize = `${range.value}rem`;
+    });
+
+    // Theme selector
+    const switchInput = document.getElementById('darkModeSwitch');
+    // Função única para aplicar o tema
+    function aplicarTema(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (typeof editor !== 'undefined') {
+          editor.setOption('theme', 'dracula');
+        }
+      } else {
+        document.body.classList.remove('dark-mode');
+        if (typeof editor !== 'undefined') {
+          editor.setOption('theme', 'default');
+        }
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    // Inicialização: recupera tema salvo ou aplica light como padrão
+    const temaSalvo = localStorage.getItem('theme') || 'light';
+    aplicarTema(temaSalvo);
+    switchInput.checked = temaSalvo === 'dark';
+
+    // Listener do switch
+    switchInput.addEventListener('change', () => {
+      aplicarTema(switchInput.checked ? 'dark' : 'light');
+    });
+
+
+
   </script>
   <script type="module" src="includes/js/auth/appGuard.js"></script>
 </body>
