@@ -107,6 +107,10 @@ public class LegacyAuthClient implements AuthenticationPort {
                 .uri("/alteraSenhap")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bodyValue(form)
+                .cookies(c -> {
+                    c.add("sessionid", "SESS");
+                    c.add("name", command.username());
+                })
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(body -> {

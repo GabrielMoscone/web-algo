@@ -1,4 +1,4 @@
-import {api} from './apiClient.js';
+import {api} from '../client/apiClient.js';
 
 const form = document.getElementById('changePwdForm');
 form?.addEventListener('submit', async (e) => {
