@@ -36,26 +36,6 @@
       }
     }
   </style>
-
-  <script type="module">
-    import { isAuthenticated } from './includes/js/auth/auth.js';
-    // if (!isAuthenticated()) location.replace('login.html');
-  </script>
-  <script>
-    function mostra_tela_aguarde(msg) {
-      "use strict";
-      if (msg == undefined) {
-        msg = '';
-      }
-      $('#aguarde_msg').html(msg);
-      $('#tela_aguarde').css('display', 'flex');
-    }
-
-    function esconde_tela_aguarde() {
-      "use strict";
-      $('#tela_aguarde').css('display', 'none');
-    }
-  </script>
 </head>
 
 <body>
@@ -323,11 +303,13 @@ int main(){
             <h5 class="modal-title" id="buscarAlgoritmoLabel">Selecionar o algoritmo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
           </div>
+
           <div class="modal-body">
             <div class="mb-3">
               <label for="tipoAlgoritmo" class="form-label">Tipo</label>
               <select class="form-select" id="tipoAlgoritmo">
-                <option selected>Sequencial</option>
+                <option selected>Selecione um tipo...</option>
+                <option>Sequencial</option>
                 <option>Condicional</option>
                 <option>Iterativo</option>
                 <option>Vetores</option>
@@ -337,15 +319,15 @@ int main(){
                 <option>Geral</option>
               </select>
             </div>
+
             <div class="mb-3">
               <label for="problemas" class="form-label">Problema</label>
               <select class="form-select" id="problemas">
-                <option selected>G00000001</option>
-                <option>G00000002</option>
-                <option>G00000003</option>
+                <option></option>
               </select>
             </div>
           </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-primary">Carregar</button>
           </div>
@@ -628,7 +610,32 @@ int main(){
 
 
   </script>
+  <script>
+    function mostra_tela_aguarde(msg) {
+      "use strict";
+      if (msg == undefined) {
+        msg = '';
+      }
+      $('#aguarde_msg').html(msg);
+      $('#tela_aguarde').css('display', 'block');
+    }
+
+    function esconde_tela_aguarde() {
+      "use strict";
+      $('#tela_aguarde').css('display', 'none');
+    }
+  </script>
+  <script type="module">
+    import {isAuthenticated} from './includes/js/auth/auth.js';
+
+    if (!isAuthenticated()) location.replace('login.html');
+  </script>
   <script type="module" src="includes/js/auth/appGuard.js"></script>
+  <script type="module">
+    import {initProblemsUI} from './includes/js/problem/problem.js';
+
+    initProblemsUI({autoLoadOnStart: false});
+  </script>
 </body>
 
 </html>
