@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C-Compiler Web</title>
+  <!-- Inclua o CSS do IntroJs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
   <!-- Inclua o CSS do CodeMirror -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
   <!-- Escolha um dos temas do CodeMirror -->
@@ -372,6 +374,8 @@ int main(){
       </div>
     </div>
 
+    <!-- Inclua o script do IntroJs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
     <!-- Inclua o script do CodeMirror -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
     <!-- Inclua os modos desejados (no exemplo, C) -->
@@ -398,10 +402,12 @@ int main(){
     <!--            <script src="includes/js/funcoes_mv.js"></script>-->
     <script src="includes/js/main.js"></script>
     <script src="includes/js/resize.js"></script>
+    <script src="includes/js/tuor.js"></script>
   </main>
 
 
   <script>
+
 
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -478,6 +484,41 @@ int main(){
       });
       return { list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end) };
     });
+
+    // Font size selector
+    const range = document.getElementById('font-size-selector');
+    range.addEventListener('input', () => {
+      document.body.style.fontSize = `${range.value}rem`;
+    });
+
+    // Theme selector
+    const switchInput = document.getElementById('darkModeSwitch');
+    // Função única para aplicar o tema
+    function aplicarTema(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (typeof editor !== 'undefined') {
+          editor.setOption('theme', 'dracula');
+        }
+      } else {
+        document.body.classList.remove('dark-mode');
+        if (typeof editor !== 'undefined') {
+          editor.setOption('theme', 'default');
+        }
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    // Inicialização: recupera tema salvo ou aplica light como padrão
+    const temaSalvo = localStorage.getItem('theme') || 'light';
+    aplicarTema(temaSalvo);
+    switchInput.checked = temaSalvo === 'dark';
+
+    // Listener do switch
+    switchInput.addEventListener('change', () => {
+      aplicarTema(switchInput.checked ? 'dark' : 'light');
+    });
+
 
     // Função para alternar breakpoint em uma linha
     function toggleBreakpoint(line) {
@@ -573,42 +614,9 @@ int main(){
     }
     const clientId = localStorage.getItem('clientId');
 
-    // Font size selector
-    const range = document.getElementById('font-size-selector');
-    range.addEventListener('input', () => {
-      document.body.style.fontSize = `${range.value}rem`;
+    document.addEventListener('DOMContentLoaded', function () {
+      startAdvancedTour()
     });
-
-    // Theme selector
-    const switchInput = document.getElementById('darkModeSwitch');
-    // Função única para aplicar o tema
-    function aplicarTema(theme) {
-      if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (typeof editor !== 'undefined') {
-          editor.setOption('theme', 'dracula');
-        }
-      } else {
-        document.body.classList.remove('dark-mode');
-        if (typeof editor !== 'undefined') {
-          editor.setOption('theme', 'default');
-        }
-      }
-      localStorage.setItem('theme', theme);
-    }
-
-    // Inicialização: recupera tema salvo ou aplica light como padrão
-    const temaSalvo = localStorage.getItem('theme') || 'light';
-    aplicarTema(temaSalvo);
-    switchInput.checked = temaSalvo === 'dark';
-
-    // Listener do switch
-    switchInput.addEventListener('change', () => {
-      aplicarTema(switchInput.checked ? 'dark' : 'light');
-    });
-
-
-
   </script>
   <script>
     function mostra_tela_aguarde(msg) {
