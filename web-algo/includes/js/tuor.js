@@ -73,5 +73,12 @@ function startAdvancedTour() {
         setTimeout(resolve, 200)
       })
     })
+    .onafterchange(function () {
+      document
+        .querySelectorAll('.introjs-helperLayer, .introjs-tooltip')
+        .forEach((el) => {
+          el.setAttribute('aria-hidden', 'true')
+        })
+    })
     .start()
 }
