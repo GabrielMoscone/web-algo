@@ -550,6 +550,9 @@ int main(){
 
   <!-- Initialize after DOM and scripts load -->
   <script defer>
+    var inputElement = document.getElementById('inputText');
+    var textareaElement = document.getElementById('displayText');
+
     document.addEventListener('DOMContentLoaded', function () {
       // Initialize tooltips after Bootstrap loads
       setTimeout(() => {
@@ -590,8 +593,7 @@ int main(){
         }
       });
 
-      var inputElement = document.getElementById('inputText');
-      var textareaElement = document.getElementById('displayText');
+
 
       // Auto-complete setup
       CodeMirror.registerHelper("hint", "c", function (editor) {
@@ -691,7 +693,7 @@ int main(){
     // Lazy load auth check
     try {
       const { isAuthenticated } = await import('./includes/js/auth/auth.js');
-      if (!isAuthenticated()) location.replace('login.html');
+      // if (!isAuthenticated()) location.replace('login.html');
     } catch (e) {
       console.warn('Auth module not available:', e);
     }
