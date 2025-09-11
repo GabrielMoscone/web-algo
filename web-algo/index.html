@@ -590,6 +590,9 @@ int main(){
         }
       });
 
+      var inputElement = document.getElementById('inputText');
+      var textareaElement = document.getElementById('displayText');
+
       // Auto-complete setup
       CodeMirror.registerHelper("hint", "c", function (editor) {
         const completions = [
