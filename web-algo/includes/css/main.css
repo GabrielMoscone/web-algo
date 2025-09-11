@@ -238,11 +238,11 @@
     }
 
     .example-text {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--bg-tertiary);
       padding: 0.75rem;
       border-radius: 4px;
       font-family: monospace;
-      color: var(--text-secondary);
+       color: var(--text-primary);
     }
 
     /* Variables Tab */
@@ -275,6 +275,7 @@
     /* C3E Tab */
     .c3e-content {
       padding: 1rem;
+      width: 100%;
       height: 100%;
       overflow-y: auto;
       font-family: monospace;
@@ -508,4 +509,13 @@
       .right-panel {
         height: 60vh;
       }
+    }
+
+    .introjs-tooltiptext {
+      color: #1a1d29;
+    }
+
+    .introjs-tooltip {
+      min-width: 400px;
+      max-width: 90%;
     }
