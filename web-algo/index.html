@@ -615,8 +615,13 @@ int main(){
     const clientId = localStorage.getItem('clientId');
 
     document.addEventListener('DOMContentLoaded', function () {
-      startAdvancedTour()
+      const hasSeenTour = localStorage.getItem('hasSeenTour');
+      if (!hasSeenTour) {
+        startAdvancedTour();
+        localStorage.setItem('hasSeenTour', 'true');
+      }
     });
+
   </script>
   <script>
     function mostra_tela_aguarde(msg) {
@@ -634,15 +639,15 @@ int main(){
     }
   </script>
   <script type="module">
-    import {isAuthenticated} from './includes/js/auth/auth.js';
+    import { isAuthenticated } from './includes/js/auth/auth.js';
 
-    if (!isAuthenticated()) location.replace('login.html');
+    // if (!isAuthenticated()) location.replace('login.html');
   </script>
   <script type="module" src="includes/js/auth/appGuard.js"></script>
   <script type="module">
-    import {initProblemsUI} from './includes/js/problem/problem.js';
+    import { initProblemsUI } from './includes/js/problem/problem.js';
 
-    initProblemsUI({autoLoadOnStart: false});
+    initProblemsUI({ autoLoadOnStart: false });
   </script>
 </body>
 

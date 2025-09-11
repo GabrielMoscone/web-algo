@@ -238,11 +238,11 @@
     }
 
     .example-text {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--bg-tertiary);
       padding: 0.75rem;
       border-radius: 4px;
       font-family: monospace;
-      color: var(--text-secondary);
+       color: var(--text-primary);
     }
 
     /* Variables Tab */
