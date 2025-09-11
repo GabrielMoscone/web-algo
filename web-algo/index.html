@@ -559,63 +559,58 @@ int main(){
         }
       }, 100);
 
-      // CodeMirror initialization
-      setTimeout(() => {
-        if (typeof CodeMirror !== 'undefined') {
-          window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-            lineNumbers: true,
-            mode: "text/x-csrc",
-            theme: "default",
-            autoCloseBrackets: true,
-            indentUnit: 4,
-            tabSize: 4,
-            extraKeys: {
-              "Ctrl-Space": "autocomplete",
-              "Ctrl-L": indentarTodoCodigo
-            }
-          });
-
-          // Breakpoint handling
-          editor.on("gutterClick", function (cm, linha) {
-            const lineInfo = cm.lineInfo(linha);
-            if (lineInfo.text.replace(' ', '') !== '') {
-              if (!lineInfo.gutterMarkers) {
-                const marker = document.createElement("div");
-                marker.style.color = "#822";
-                marker.innerHTML = "●";
-                cm.setGutterMarker(linha, "CodeMirror-linenumbers", marker);
-                lista_breakpoints.push(linha + 1);
-              } else {
-                cm.setGutterMarker(linha, "CodeMirror-linenumbers", null);
-                const index = lista_breakpoints.indexOf(linha + 1);
-                if (index !== -1) lista_breakpoints.splice(index, 1);
-              }
-            }
-          });
-
-          // Auto-complete setup
-          CodeMirror.registerHelper("hint", "c", function (editor) {
-            const completions = [
-              "break", "case", "char", "continue", "do", "double", "else",
-              "float", "for", "goto", "if", "int", "long", "return",
-              "sizeof", "switch", "void", "while"
-            ];
-            const cur = editor.getCursor();
-            const token = editor.getTokenAt(cur);
-            const start = token.start, end = cur.ch;
-            const prefix = token.string;
-            const list = completions.filter(c => c.startsWith(prefix));
-            return {
-              list: list,
-              from: CodeMirror.Pos(cur.line, start),
-              to: CodeMirror.Pos(cur.line, end)
-            };
-          });
-
-          // Restore data after editor is ready
-          restoreData();
+      window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "text/x-csrc",
+        theme: "default",
+        autoCloseBrackets: true,
+        indentUnit: 4,
+        tabSize: 4,
+        extraKeys: {
+          "Ctrl-Space": "autocomplete",
+          "Ctrl-L": indentarTodoCodigo
         }
-      }, 200);
+      });
+
+      // Breakpoint handling
+      editor.on("gutterClick", function (cm, linha) {
+        const lineInfo = cm.lineInfo(linha);
+        if (lineInfo.text.replace(' ', '') !== '') {
+          if (!lineInfo.gutterMarkers) {
+            const marker = document.createElement("div");
+            marker.style.color = "#822";
+            marker.innerHTML = "●";
+            cm.setGutterMarker(linha, "CodeMirror-linenumbers", marker);
+            lista_breakpoints.push(linha + 1);
+          } else {
+            cm.setGutterMarker(linha, "CodeMirror-linenumbers", null);
+            const index = lista_breakpoints.indexOf(linha + 1);
+            if (index !== -1) lista_breakpoints.splice(index, 1);
+          }
+        }
+      });
+
+      // Auto-complete setup
+      CodeMirror.registerHelper("hint", "c", function (editor) {
+        const completions = [
+          "break", "case", "char", "continue", "do", "double", "else",
+          "float", "for", "goto", "if", "int", "long", "return",
+          "sizeof", "switch", "void", "while"
+        ];
+        const cur = editor.getCursor();
+        const token = editor.getTokenAt(cur);
+        const start = token.start, end = cur.ch;
+        const prefix = token.string;
+        const list = completions.filter(c => c.startsWith(prefix));
+        return {
+          list: list,
+          from: CodeMirror.Pos(cur.line, start),
+          to: CodeMirror.Pos(cur.line, end)
+        };
+      });
+
+      // Restore data after editor is ready
+      restoreData();
 
       // Theme and font size controls
       const fontRange = document.getElementById('font-size-selector');
@@ -691,14 +686,12 @@ int main(){
   <!-- Module scripts for authentication and problems -->
   <script type="module">
     // Lazy load auth check
-    setTimeout(async () => {
-      try {
-        const { isAuthenticated } = await import('./includes/js/auth/auth.js');
-        // Uncomment when auth is needed: if (!isAuthenticated()) location.replace('login.html');
-      } catch (e) {
-        console.warn('Auth module not available:', e);
-      }
-    }, 1000);
+    try {
+      const { isAuthenticated } = await import('./includes/js/auth/auth.js');
+      if (!isAuthenticated()) location.replace('login.html');
+    } catch (e) {
+      console.warn('Auth module not available:', e);
+    }
   </script>
 
   <script type="module" src="includes/js/auth/appGuard.js"></script>
