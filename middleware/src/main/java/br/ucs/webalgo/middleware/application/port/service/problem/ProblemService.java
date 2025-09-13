@@ -1,6 +1,8 @@
 package br.ucs.webalgo.middleware.application.port.service.problem;
 
 import br.ucs.webalgo.middleware.application.port.in.problem.ProblemUseCase;
+import br.ucs.webalgo.middleware.application.port.in.problem.dto.FetchByCodeCommand;
+import br.ucs.webalgo.middleware.application.port.in.problem.dto.FetchByCodeResult;
 import br.ucs.webalgo.middleware.application.port.in.problem.dto.SearchByKeyCommand;
 import br.ucs.webalgo.middleware.application.port.in.problem.dto.SearchByKeyResult;
 import br.ucs.webalgo.middleware.application.port.out.problem.ProblemPort;
@@ -27,5 +29,10 @@ public class ProblemService implements ProblemUseCase {
             return Mono.error(new IllegalStateException("Cookies de sessão ausentes"));
         }
         return client.searchProblemByKey(command);
+    }
+
+    @Override
+    public Mono<FetchByCodeResult> fetchProblemData(FetchByCodeCommand command) {
+        return client.fetchProblemData(command);
     }
 }

@@ -1,7 +1,10 @@
 package br.ucs.webalgo.middleware.adapter.out.integration.problem;
 
+import br.ucs.webalgo.middleware.adapter.out.integration.problem.dto.LegacyProblemDataResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.problem.dto.LegacySearchByKeyResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.problem.mapper.LegacyProblemMapper;
+import br.ucs.webalgo.middleware.application.port.in.problem.dto.FetchByCodeCommand;
+import br.ucs.webalgo.middleware.application.port.in.problem.dto.FetchByCodeResult;
 import br.ucs.webalgo.middleware.application.port.in.problem.dto.SearchByKeyCommand;
 import br.ucs.webalgo.middleware.application.port.in.problem.dto.SearchByKeyResult;
 import br.ucs.webalgo.middleware.application.port.out.problem.ProblemPort;
@@ -38,6 +41,27 @@ public class LegacyProblemClient implements ProblemPort {
                 })
                 .retrieve()
                 .bodyToMono(LegacySearchByKeyResponse.class)
+                .map(problemMapper::toResult);
+    }
+
+    @Override
+    public Mono<FetchByCodeResult> fetchProblemData(FetchByCodeCommand command) {
+        LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("codigoProblema", command.code());
+
+        return client.post()
+                .uri("/dadosProblema")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Referer", "https://vposeidon9.ucs.br/")
+                .header("X-Requested-With", "XMLHttpRequest")
+                .bodyValue(form)
+                .cookies(c -> {
+                    c.add("sessionid", command.sessionId());
+                    c.add("name", command.username());
+                })
+                .retrieve()
+                .bodyToMono(LegacyProblemDataResponse.class)
                 .map(problemMapper::toResult);
     }
 

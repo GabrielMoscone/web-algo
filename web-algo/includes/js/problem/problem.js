@@ -1,14 +1,9 @@
 import {api} from '../client/apiClient.js';
 
 const TYPE_TO_KEY = {
-    'Sequencial': 'S',
-    'Condicional': 'C',
-    'Iterativo': 'I',
-    'Vetores': 'V',
-    'Matrizes': 'M',
-    'Funções': 'F',
-    'Recursividade': 'R',
-    'Geral': 'G',
+    'Sequencial': 'S', 'Condicional': 'C', 'Iterativo': 'I',
+    'Vetores': 'V', 'Matrizes': 'M', 'Funções': 'F',
+    'Recursividade': 'R', 'Geral': 'G',
 };
 
 export async function loadProblemsByTypeLabel(label) {
@@ -36,32 +31,96 @@ function fillOptions(select, codes) {
     }
 }
 
+function escapeHtml(s = '') {
+    return String(s)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
+function setTextWithBreaks(el, value) {
+    el.innerHTML = escapeHtml(value ?? '').replace(/\r?\n/g, '<br>');
+}
+
+async function loadProblemDetailsByCode(code) {
+    return api(`/problems/${encodeURIComponent(code)}/details`);
+}
+
+function renderProblemDetails(data) {
+    const qTitle = document.getElementById('question');
+    if (qTitle) qTitle.textContent = data?.description ?? '—';
+
+    const exampleTexts = document.querySelectorAll('#questao .example-text');
+    if (exampleTexts[0]) setTextWithBreaks(exampleTexts[0], data?.input);
+    if (exampleTexts[1]) setTextWithBreaks(exampleTexts[1], data?.output);
+
+    if (typeof fecha_modal === 'function') {
+        fecha_modal('buscarAlgoritmoModal');
+    }
+}
+
 export function initProblemsUI({
                                    tipoSelectorId = 'tipoAlgoritmo',
                                    problemasSelectorId = 'problemas',
                                    carregarBtnSelector = '#buscarAlgoritmoModal .btn-primary',
                                    autoLoadOnStart = false,
+                                   fetchDefaultOnOpen = false,
+                                   defaultCode = 'S00000050',
                                } = {}) {
     const tipoEl = document.getElementById(tipoSelectorId);
     const probsEl = document.getElementById(problemasSelectorId);
     const carregarBtn = document.querySelector(carregarBtnSelector);
 
-    async function refresh() {
+    async function refreshList() {
         setLoading(probsEl, true);
         try {
             const label = tipoEl.value || tipoEl.options[tipoEl.selectedIndex]?.text;
             const codes = await loadProblemsByTypeLabel(label);
             fillOptions(probsEl, codes);
+            return codes;
         } catch (e) {
             console.error('Falha ao carregar problemas:', e);
             probsEl.innerHTML = '<option>Erro ao carregar</option>';
+            return [];
         } finally {
             probsEl.disabled = false;
         }
     }
 
-    tipoEl?.addEventListener('change', refresh);
-    carregarBtn?.addEventListener('click', refresh);
+    tipoEl?.addEventListener('change', refreshList);
 
-    if (autoLoadOnStart) refresh();
+    carregarBtn?.addEventListener('click', async () => {
+        const code = probsEl?.value?.trim();
+        if (!code) return;
+        try {
+            const details = await loadProblemDetailsByCode(code);
+            renderProblemDetails(details);
+        } catch (e) {
+            console.error('Falha ao carregar detalhes do problema:', e);
+        }
+    });
+
+    (async () => {
+        let codes = [];
+        if (autoLoadOnStart) {
+            codes = await refreshList();
+        }
+
+        if (fetchDefaultOnOpen) {
+            if (defaultCode && codes.includes(defaultCode)) {
+                probsEl.value = defaultCode;
+            }
+            const codeToLoad = defaultCode || probsEl?.value?.trim();
+            if (codeToLoad) {
+                try {
+                    const details = await loadProblemDetailsByCode(codeToLoad);
+                    renderProblemDetails(details);
+                } catch (e) {
+                    console.error('Falha ao carregar exercício padrão:', e);
+                }
+            }
+        }
+    })();
 }
