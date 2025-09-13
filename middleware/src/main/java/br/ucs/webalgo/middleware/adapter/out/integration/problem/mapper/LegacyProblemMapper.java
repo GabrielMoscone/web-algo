@@ -1,6 +1,8 @@
 package br.ucs.webalgo.middleware.adapter.out.integration.problem.mapper;
 
+import br.ucs.webalgo.middleware.adapter.out.integration.problem.dto.LegacyProblemDataResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.problem.dto.LegacySearchByKeyResponse;
+import br.ucs.webalgo.middleware.application.port.in.problem.dto.FetchByCodeResult;
 import br.ucs.webalgo.middleware.application.port.in.problem.dto.SearchByKeyResult;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +19,10 @@ public class LegacyProblemMapper {
                         .toList();
 
         return new SearchByKeyResult(codes);
+    }
+
+    public FetchByCodeResult toResult(LegacyProblemDataResponse res) {
+        var r = res.respostas();
+        return new FetchByCodeResult(r.ent(), r.sai(), r.custo(), r.sols(), r.melhor(), r.desc());
     }
 }
