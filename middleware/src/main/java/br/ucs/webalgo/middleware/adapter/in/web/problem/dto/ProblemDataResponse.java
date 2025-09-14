@@ -8,6 +8,5 @@ public record ProblemDataResponse(
         Integer cost,
         List<String> solutions,
         List<String> ranking,
-        String description,
-        String error) {
+        String description) {
 }

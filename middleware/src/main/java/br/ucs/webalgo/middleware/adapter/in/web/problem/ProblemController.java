@@ -55,12 +55,8 @@ public class ProblemController {
                 .map(resp -> ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(resp))
-                .onErrorResume(IllegalStateException.class, e ->
-                        Mono.just(ResponseEntity.status(401).body(
-                                new ProblemDataResponse(null, null, null, List.of(), List.of(), null, e.getMessage()))))
-                .onErrorResume(IllegalArgumentException.class, e ->
-                        Mono.just(ResponseEntity.unprocessableEntity().body(
-                                new ProblemDataResponse(null, null, null, List.of(), List.of(), null, e.getMessage()))));
+                .onErrorResume(IllegalStateException.class, e -> Mono.just(ResponseEntity.status(401).build()))
+                .onErrorResume(IllegalArgumentException.class, e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
     }
 
 }

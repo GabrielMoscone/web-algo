@@ -53,8 +53,6 @@ public class LegacyProblemClient implements ProblemPort {
                 .uri("/dadosProblema")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Referer", "https://vposeidon9.ucs.br/")
-                .header("X-Requested-With", "XMLHttpRequest")
                 .bodyValue(form)
                 .cookies(c -> {
                     c.add("sessionid", command.sessionId());
@@ -62,7 +60,7 @@ public class LegacyProblemClient implements ProblemPort {
                 })
                 .retrieve()
                 .bodyToMono(LegacyProblemDataResponse.class)
-                .map(problemMapper::toResult);
+                .map(res -> problemMapper.toResult(res, command.code()));
     }
 
 }

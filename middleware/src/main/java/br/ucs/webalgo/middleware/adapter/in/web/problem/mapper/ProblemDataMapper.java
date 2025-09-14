@@ -11,7 +11,7 @@ public class ProblemDataMapper {
         return new FetchByCodeCommand(code, sessionId, username);
     }
 
-    public ProblemDataResponse toResponse(FetchByCodeResult r) {
-        return new ProblemDataResponse(r.ent(), r.sai(), r.custo(), r.sols(), r.melhor(), r.desc(), null);
+    public ProblemDataResponse toResponse(FetchByCodeResult result) {
+        return new ProblemDataResponse(result.input(), result.output(), result.cost(), result.solutions(), result.ranking(), result.description());
     }
 }
