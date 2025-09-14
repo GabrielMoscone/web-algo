@@ -21,8 +21,10 @@ public class LegacyProblemMapper {
         return new SearchByKeyResult(codes);
     }
 
-    public FetchByCodeResult toResult(LegacyProblemDataResponse res) {
-        var r = res.respostas();
-        return new FetchByCodeResult(r.ent(), r.sai(), r.custo(), r.sols(), r.melhor(), r.desc());
+    public FetchByCodeResult toResult(LegacyProblemDataResponse res, String code) {
+        LegacyProblemDataResponse.LegacyProblemDataInner result = res.respostas();
+
+        List<String> solutions = result.sols().stream().map(el -> el + "_" + code).toList();
+        return new FetchByCodeResult(result.ent(), result.sai(), result.custo(), solutions, result.melhor(), result.desc());
     }
 }

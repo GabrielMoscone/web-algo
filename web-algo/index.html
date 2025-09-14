@@ -279,12 +279,12 @@
           <div class="question-content">
             <div class="d-flex align-items-center mb-3" style="gap: 8px;">
               <label for="solucoes" class="form-label mb-0">Soluções:</label>
-              <select id="solucoes" class="form-select" style="width: auto;">
+              <select id="solucoes" class="form-select" style="width:auto;">
                 <option value="">Nenhum encontrado</option>
               </select>
-              <button class="btn btn-primary btn-sm">Criar</button>
-              <button class="btn btn-success btn-sm">Salvar</button>
-              <button class="btn btn-secondary btn-sm">Carregar</button>
+              <button id="btnCriarSol" class="btn btn-primary btn-sm">Criar</button>
+              <button id="btnSalvarSol" class="btn btn-success btn-sm">Salvar</button>
+              <button id="btnCarregarSol" class="btn btn-secondary btn-sm">Carregar</button>
             </div>
 
             <div class="question-title" id="question">
@@ -734,14 +734,18 @@ int main(){
 
   <script type="module">
     import { initProblemsUI } from './includes/js/problem/problem.js';
-
     document.addEventListener('DOMContentLoaded', () => {
       initProblemsUI({
-        autoLoadOnStart: true,        // carrega a lista do tipo selecionado
-        fetchDefaultOnOpen: true,     // busca e renderiza o exercício padrão
-        defaultCode: 'S00000050'      // ou 'S000050' se esse for o correto no seu backend
+        autoLoadOnStart: true,
+        fetchDefaultOnOpen: true,
+        defaultCode: 'S00000050'
       });
     });
+  </script>
+
+  <script type="module">
+    import { initSolutionsUI } from './includes/js/solution/solutions.js';
+    initSolutionsUI({ selectId: 'solucoes', loadBtnId: 'btnCarregarSol' });
   </script>
 
 </body>
