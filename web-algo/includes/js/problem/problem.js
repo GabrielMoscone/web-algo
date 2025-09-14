@@ -56,6 +56,14 @@ function renderProblemDetails(data) {
     if (exampleTexts[0]) setTextWithBreaks(exampleTexts[0], data?.input);
     if (exampleTexts[1]) setTextWithBreaks(exampleTexts[1], data?.output);
 
+    const solucoesSelect = document.getElementById('solucoes');
+    if (solucoesSelect) {
+        fillSolutionOptions(solucoesSelect, data?.solutions);
+        if (solucoesSelect.options.length && !solucoesSelect.value) {
+            solucoesSelect.selectedIndex = 0;
+        }
+    }
+
     if (typeof fecha_modal === 'function') {
         fecha_modal('buscarAlgoritmoModal');
     }
@@ -123,4 +131,24 @@ export function initProblemsUI({
             }
         }
     })();
+}
+
+function fillSolutionOptions(select, solutions) {
+    select.innerHTML = '';
+    const list = Array.isArray(solutions) ? solutions : [];
+
+    if (!list.length) {
+        select.innerHTML = '<option value="">Nenhum encontrado</option>';
+        return;
+    }
+
+    for (const item of list) {
+        const code = typeof item === 'string' ? item : item?.code;
+        const label = typeof item === 'string' ? item : (item?.label || item?.code);
+        if (!code) continue;
+        const opt = document.createElement('option');
+        opt.value = code;
+        opt.textContent = label ?? code;
+        select.appendChild(opt);
+    }
 }

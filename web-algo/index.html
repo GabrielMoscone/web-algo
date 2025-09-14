@@ -117,7 +117,7 @@
 
       <div class="navbar-nav me-auto">
         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#buscarAlgoritmoModal">
-          Algoritmo
+          Algoritmos
           <svg class="bi" width="24" height="24" role="img" aria-label="Buscar">
             <use xlink:href="#search-icon" />
           </svg>
@@ -277,6 +277,16 @@
         <!-- Questão Tab -->
         <div class="tab-pane fade show active" id="questao" role="tabpanel" aria-labelledby="questao-tab">
           <div class="question-content">
+            <div class="d-flex align-items-center mb-3" style="gap: 8px;">
+              <label for="solucoes" class="form-label mb-0">Soluções:</label>
+              <select id="solucoes" class="form-select" style="width: auto;">
+                <option value="">Nenhum encontrado</option>
+              </select>
+              <button class="btn btn-primary btn-sm">Criar</button>
+              <button class="btn btn-success btn-sm">Salvar</button>
+              <button class="btn btn-secondary btn-sm">Carregar</button>
+            </div>
+
             <div class="question-title" id="question">
             </div>
 
@@ -380,8 +390,7 @@ int main(){
           <div class="mb-3">
             <label for="tipoAlgoritmo" class="form-label">Tipo</label>
             <select class="form-select" id="tipoAlgoritmo">
-              <option selected>Selecione um tipo...</option>
-              <option>Sequencial</option>
+              <option selected>Sequencial</option>
               <option>Condicional</option>
               <option>Iterativo</option>
               <option>Vetores</option>
