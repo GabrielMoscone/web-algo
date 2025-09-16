@@ -1,12 +1,10 @@
 package br.ucs.webalgo.middleware.adapter.out.integration.solution;
 
 import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacyCreateSolutionResponse;
+import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacySaveSolutionResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacySolutionDataResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.solution.mapper.LegacySolutionMapper;
-import br.ucs.webalgo.middleware.application.port.in.solution.dto.CreateSolutionCommand;
-import br.ucs.webalgo.middleware.application.port.in.solution.dto.CreateSolutionResult;
-import br.ucs.webalgo.middleware.application.port.in.solution.dto.FetchSolutionCommand;
-import br.ucs.webalgo.middleware.application.port.in.solution.dto.FetchSolutionResult;
+import br.ucs.webalgo.middleware.application.port.in.solution.dto.*;
 import br.ucs.webalgo.middleware.application.port.out.solution.SolutionPort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -61,5 +59,27 @@ public class LegacySolutionClient implements SolutionPort {
                 .retrieve()
                 .bodyToMono(LegacyCreateSolutionResponse.class)
                 .map(el -> solutionMapper.toResult(el, command.problemCode()));
+    }
+
+    @Override
+    public Mono<SaveSolutionResult> saveSolution(SaveSolutionCommand command) {
+        var form = new LinkedMultiValueMap<String, String>();
+        form.add("algo", command.algorithm());
+        form.add("dadosProb", command.problemCode());
+        form.add("custo", String.valueOf(command.cost()));
+        form.add("resposta", command.answer());
+
+        return client.post()
+                .uri("/alteraAlgo")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(form)
+                .cookies(c -> {
+                    c.add("sessionid", command.sessionId());
+                    c.add("name", command.username());
+                })
+                .retrieve()
+                .bodyToMono(LegacySaveSolutionResponse.class)
+                .map(solutionMapper::toResult);
     }
 }

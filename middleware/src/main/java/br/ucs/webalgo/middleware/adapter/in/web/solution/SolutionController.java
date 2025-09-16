@@ -1,13 +1,13 @@
 package br.ucs.webalgo.middleware.adapter.in.web.solution;
 
-import br.ucs.webalgo.middleware.adapter.in.web.solution.dto.CreateSolutionRequest;
-import br.ucs.webalgo.middleware.adapter.in.web.solution.dto.CreateSolutionResponse;
-import br.ucs.webalgo.middleware.adapter.in.web.solution.dto.SolutionDataResponse;
+import br.ucs.webalgo.middleware.adapter.in.web.solution.dto.*;
 import br.ucs.webalgo.middleware.adapter.in.web.solution.mapper.CreateSolutionMapper;
+import br.ucs.webalgo.middleware.adapter.in.web.solution.mapper.SaveSolutionMapper;
 import br.ucs.webalgo.middleware.adapter.in.web.solution.mapper.SolutionDataMapper;
 import br.ucs.webalgo.middleware.application.port.in.solution.SolutionUseCase;
 import br.ucs.webalgo.middleware.application.port.in.solution.dto.CreateSolutionCommand;
 import br.ucs.webalgo.middleware.application.port.in.solution.dto.FetchSolutionCommand;
+import br.ucs.webalgo.middleware.application.port.in.solution.dto.SaveSolutionCommand;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -19,11 +19,14 @@ public class SolutionController {
     private final SolutionUseCase solutionUseCase;
     private final SolutionDataMapper solutionDataMapper;
     private final CreateSolutionMapper createSolutionMapper;
+    private final SaveSolutionMapper saveSolutionMapper;
 
-    public SolutionController(SolutionUseCase solutionUseCase, SolutionDataMapper solutionDataMapper, CreateSolutionMapper createSolutionMapper) {
+    public SolutionController(SolutionUseCase solutionUseCase, SolutionDataMapper solutionDataMapper,
+                              CreateSolutionMapper createSolutionMapper, SaveSolutionMapper saveSolutionMapper) {
         this.solutionUseCase = solutionUseCase;
         this.solutionDataMapper = solutionDataMapper;
         this.createSolutionMapper = createSolutionMapper;
+        this.saveSolutionMapper = saveSolutionMapper;
     }
 
     @GetMapping("/{code}/details")
@@ -36,8 +39,10 @@ public class SolutionController {
         return solutionUseCase.fetchSolutionData(command)
                 .map(solutionDataMapper::toResponse)
                 .map(ResponseEntity::ok)
-                .onErrorResume(IllegalStateException.class, e -> Mono.just(ResponseEntity.status(401).build()))
-                .onErrorResume(IllegalArgumentException.class, e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
+                .onErrorResume(IllegalStateException.class,
+                        e -> Mono.just(ResponseEntity.status(401).build()))
+                .onErrorResume(IllegalArgumentException.class,
+                        e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
     }
 
     @PostMapping
@@ -50,6 +55,21 @@ public class SolutionController {
         return solutionUseCase.createSolution(command)
                 .map(createSolutionMapper::toResponse)
                 .map(ResponseEntity::ok)
-                .onErrorResume(IllegalArgumentException.class, e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
+                .onErrorResume(IllegalArgumentException.class,
+                        e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
+    }
+
+    @PostMapping("/save")
+    public Mono<ResponseEntity<SaveSolutionResponse>> save(@RequestBody SaveSolutionRequest req,
+                                                           @CookieValue("sessionid") String sessionId,
+                                                           @CookieValue("name") String userName) {
+
+        SaveSolutionCommand cmd = saveSolutionMapper.toCommand(req, sessionId, userName);
+
+        return solutionUseCase.saveSolution(cmd)
+                .map(saveSolutionMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .onErrorResume(IllegalArgumentException.class,
+                        e -> Mono.just(ResponseEntity.unprocessableEntity().build()));
     }
 }
