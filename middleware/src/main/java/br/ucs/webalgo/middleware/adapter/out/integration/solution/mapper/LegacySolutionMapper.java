@@ -1,9 +1,11 @@
 package br.ucs.webalgo.middleware.adapter.out.integration.solution.mapper;
 
 import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacyCreateSolutionResponse;
+import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacySaveSolutionResponse;
 import br.ucs.webalgo.middleware.adapter.out.integration.solution.dto.LegacySolutionDataResponse;
 import br.ucs.webalgo.middleware.application.port.in.solution.dto.CreateSolutionResult;
 import br.ucs.webalgo.middleware.application.port.in.solution.dto.FetchSolutionResult;
+import br.ucs.webalgo.middleware.application.port.in.solution.dto.SaveSolutionResult;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,5 +29,10 @@ public class LegacySolutionMapper {
 
     public CreateSolutionResult toResult(LegacyCreateSolutionResponse response, String problemCode) {
         return new CreateSolutionResult(response.resposta() + "_" + problemCode);
+    }
+
+    public SaveSolutionResult toResult(LegacySaveSolutionResponse response) {
+        String status = response == null || response.resposta() == null ? "erro" : response.resposta();
+        return new SaveSolutionResult(status);
     }
 }

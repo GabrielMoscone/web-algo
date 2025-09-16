@@ -87,4 +87,55 @@ export function initSolutionsUI({
             }
         });
     });
+
+    function getEditorCode() {
+        try {
+            if (window.editor?.getValue) return window.editor.getValue();
+        } catch {}
+        const ta = document.getElementById('code');
+        return ta ? ta.value : '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnSave = document.getElementById('btnSalvarSol');
+        if (!btnSave) return;
+
+        btnSave.addEventListener('click', async () => {
+            const selectSolutions = document.getElementById('solucoes');
+            const problemCode = selectSolutions?.value?.trim();
+            if (!problemCode) {
+                alert('Selecione uma solução na lista antes de salvar.');
+                return;
+            }
+
+            const algorithm = getEditorCode();
+            if (!algorithm) {
+                alert('O código está vazio. Escreva algo antes de salvar.');
+                return;
+            }
+
+            const payload = {
+                algorithm,
+                problemCode,
+                cost: 0,
+                answer: 'ok'
+            };
+
+            console.log(payload);
+
+            try {
+                try { mostra_tela_aguarde?.('Salvando solução...'); } catch {}
+                await api('/solutions/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                console.error('Erro ao salvar solução:', e);
+                alert('Falha na chamada de salvar solução.');
+            } finally {
+                try { esconde_tela_aguarde?.(); } catch {}
+            }
+        });
+    });
 }
