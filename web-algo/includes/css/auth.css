@@ -1,0 +1,47 @@
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.ucs-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 140px;
+}
+
+.form-control {
+    border-radius: 4px;
+}
+
+.login-card {
+    border: none;
+    padding: 30px;
+}
+
+.link-options {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.link-options a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link-options a:hover {
+    text-decoration: underline;
+}
+
+.divider {
+    margin: 15px 0;
+    color: var(--text-primary);
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
