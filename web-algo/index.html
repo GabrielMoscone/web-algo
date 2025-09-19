@@ -167,8 +167,17 @@
               <path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
             </svg>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow">
-            <li><a class="dropdown-item" id="logoutBtn" href="#">Sign out</a></li>
+          <ul class="dropdown-menu dropdown-menu-end shadow sidebar">
+            <li><a class="dropdown-item nav-link-custom" id="logoutBtn" href="/web-algo/login.html">Sair</a></li>
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <!-- Accessibility box -->
+            <li class="accessibility-container-desktop">
+
+            </li>
           </ul>
         </div>
       </div>
@@ -180,7 +189,7 @@
     aria-labelledby="offcanvasMenuLabel">
     <header class="offcanvas-header" style="display: flex; justify-content: space-between;">
       <h5 class="offcanvas-title" id="offcanvasMenuLabel">WebAlgo</h5>
-      <button type="button" class="btn-close-modal" data-bs-dismiss="offcanvas" aria-label="Fechar">
+      <button type="button" class="btn-close-modal" data-bs-dismiss="offcanvas" aria-label="Fechar" style="all:unset;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" stroke="var(--text-primary)" stroke-width="2"
           stroke-linecap="round" style="width: 20px; height: 20px;" aria-hidden="true">
           <path d="M6 6 L24 24 M6 24 L24 6" />
@@ -219,23 +228,26 @@
       </nav>
 
       <footer class="text-center mt-auto">
-        <div class="accessibility-box">
-          <div class="font-size-container">
-            <span aria-hidden="true">a</span>
-            <input type="range" id="font-size-selector" class="form-range" min="0.5" max="2" step="0.1" value="1"
-              aria-label="Tamanho da fonte">
-            <span aria-hidden="true">A</span>
-          </div>
+        <div class="accessibility-container-mobile">
+          <div class="accessibility-box">
+            <div class="font-size-container">
+              <span aria-hidden="true">a</span>
+              <input type="range" id="font-size-selector" class="form-range" min="0.5" max="2" step="0.1" value="1"
+                aria-label="Tamanho da fonte">
+              <span aria-hidden="true">A</span>
+            </div>
 
-          <div class="theme-container form-check form-switch mt-3">
-            <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch">
-            <label class="form-check-label" for="darkModeSwitch">Dark mode</label>
+            <div class="theme-container form-check form-switch mt-3">
+              <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch">
+              <label class="form-check-label" for="darkModeSwitch">Dark mode</label>
+            </div>
           </div>
         </div>
 
         <img src="./includes/media/logo_ucs_horizontal.png" alt="UCS" style="max-width: 120px; margin-top: 4rem;"
           loading="lazy">
-        <p class="small text-muted mt-2">© 2001–2025 Universidade de Caxias do Sul. Todos os direitos reservados.</p>
+        <p class="small mt-2" style="color: var(--text-secondary);">© 2001–2025 Universidade de Caxias do Sul. Todos os
+          direitos reservados.</p>
       </footer>
     </div>
   </aside>
@@ -277,15 +289,37 @@
         <!-- Questão Tab -->
         <div class="tab-pane fade show active" id="questao" role="tabpanel" aria-labelledby="questao-tab">
           <div class="question-content">
-            <div class="d-flex align-items-center mb-3" style="gap: 8px;">
-              <label for="solucoes" class="form-label mb-0">Soluções:</label>
-              <select id="solucoes" class="form-select" style="width:auto;">
-                <option value="">Nenhum encontrado</option>
-              </select>
-              <button id="btnCriarSol" class="btn btn-primary btn-sm">Criar</button>
-              <button id="btnSalvarSol" class="btn btn-success btn-sm">Salvar</button>
-              <button id="btnCarregarSol" class="btn btn-secondary btn-sm">Carregar</button>
+            <div class="mb-3">
+              <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                  <label for="solucoes" class="form-label mb-0">Soluções:</label>
+                </div>
+                <div class="col-12 col-md-auto">
+                  <select id="solucoes" class="form-select">
+                    <option value="">Nenhum encontrado</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-auto d-flex flex-wrap gap-1">
+                  <button id="btnCriarSol"
+                    class="btn btn-primary btn-sm flex-fill flex-md-none d-flex align-items-center gap-1 justify-content-center"><svg
+                      width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>Criar</button>
+                  <button id="btnSalvarSol"
+                    class="btn btn-success btn-sm flex-fill flex-md-none d-flex align-items-center gap-1 justify-content-center"><svg
+                      width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path
+                        d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
+                    </svg>Salvar</button>
+                  <button id="btnCarregarSol"
+                    class="btn btn-secondary btn-sm flex-fill flex-md-none d-flex align-items-center gap-1 justify-content-center"><svg
+                      width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z" />
+                    </svg>Carregar</button>
+                </div>
+              </div>
             </div>
+
 
             <div class="question-title" id="question">
             </div>
@@ -565,6 +599,7 @@ int main(){
   <script src="includes/js/main.js" defer></script>
   <script src="includes/js/resize.js" defer></script>
   <script src="includes/js/tuor.js" defer></script>
+  <script src="includes/js/theme.js" defer></script>
 
   <!-- Initialize after DOM and scripts load -->
   <script defer>
