@@ -40,9 +40,8 @@
     onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/show-hint.min.css"
     as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+    media="print" onload="this.media='all'">
 
   <!-- Preload jQuery -->
   <link rel="preload" href="https://code.jquery.com/jquery-3.6.0.min.js" as="script">
@@ -381,25 +380,27 @@
 
     <!-- Right Panel -->
     <section class="right-panel d-none d-md-flex">
-      <div class="desktop-right-layout"></div>
-    </section>
-
-    <!-- Code Editor Container -->
-    <div id="code-container" class="code-editor-container">
-      <textarea id="code" aria-label="Editor de código">/* Compilador WebAlgo Web */
+      <div class="desktop-right-layout">
+        <!-- Code Editor Container -->
+        <div id="code-container" class="code-editor-container">
+          <textarea id="code" aria-label="Editor de código">/* Compilador WebAlgo Web */
 int main(){
     /* Desenvolva seu código C aqui! */
     return 0;
 }</textarea>
-    </div>
+        </div>
 
-    <!-- Console Container -->
-    <div id="console-container" class="console-container">
-      <textarea class="console-output" id="displayText" readonly
-        aria-label="Saída do console">Pronto para executar...</textarea>
-      <input type="text" id="inputText" class="console-input" placeholder="Digite aqui..." disabled
-        aria-label="Entrada de dados">
-    </div>
+        <!-- Console Container -->
+        <div id="console-container" class="console-container">
+          <textarea class="console-output" id="displayText" readonly
+            aria-label="Saída do console">Pronto para executar...</textarea>
+          <input type="text" id="inputText" class="console-input" placeholder="Digite aqui..." disabled
+            aria-label="Entrada de dados">
+        </div>
+      </div>
+    </section>
+
+
   </main>
 
   <!-- Loading Overlay -->
@@ -576,14 +577,21 @@ int main(){
 
   <!-- Load non-critical scripts with defer -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/clike/clike.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/edit/closebrackets.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/show-hint.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/anyword-hint.min.js" defer></script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
-    defer></script>
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+  <!-- Inclua o script do CodeMirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
+  <!-- Inclua os modos desejados (no exemplo, C) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/clike/clike.min.js"></script>
+  <!-- Inclua o complemento para preenchimento automático de chaves -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/edit/closebrackets.min.js"></script>
+  <!-- Addon for Autocomplete -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/show-hint.min.js"></script>
+  <!-- Addon for C Hinting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/addon/hint/anyword-hint.min.js"></script>
 
   <!-- Google tag (gtag.js) -->
   <script defer src="https://www.googletagmanager.com/gtag/js?id=G-6WDKCMCM9P"></script>
@@ -627,6 +635,12 @@ int main(){
           "Ctrl-L": indentarTodoCodigo
         }
       });
+
+      document.querySelector('.CodeMirror textarea')
+        ?.setAttribute('name', 'code-editor');
+
+      document.querySelector('.CodeMirror textarea')
+        ?.setAttribute('aria-label', 'Editor de código');
 
       // Breakpoint handling
       editor.on("gutterClick", function (cm, linha) {
@@ -725,13 +739,15 @@ int main(){
       }
 
       // Tour initialization
-      const hasSeenTour = localStorage.getItem('hasSeenTour');
-      if (!hasSeenTour && typeof startAdvancedTour === 'function') {
-        setTimeout(() => {
+      function initTourOnce() {
+        if (!localStorage.getItem('hasSeenTour') && typeof startAdvancedTour === 'function') {
           startAdvancedTour();
           localStorage.setItem('hasSeenTour', 'true');
-        }, 1000);
+        }
+        // remove o listener para não rodar de novo
+        document.removeEventListener('click', initTourOnce);
       }
+      document.addEventListener('click', initTourOnce, { once: true });
     });
 
     // Window load event for final initialization
