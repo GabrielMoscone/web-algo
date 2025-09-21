@@ -275,6 +275,13 @@
               C3E
             </button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ranking-tab" data-bs-toggle="tab"
+                    data-bs-target="#ranking" type="button" role="tab"
+                    aria-controls="ranking" aria-selected="false">
+              Ranking
+            </button>
+          </li>
           <li class="nav-item d-md-none" role="presentation">
             <button class="nav-link" id="codigo-tab" data-bs-toggle="tab" data-bs-target="#codigo" type="button"
               role="tab" aria-controls="codigo" aria-selected="false">
@@ -325,12 +332,17 @@
 
             <div class="example-section">
               <h6>Exemplo de entrada</h6>
-              <div class="example-text"><br></div>
+              <div class="example-text" id="example-input"><br></div>
             </div>
 
             <div class="example-section">
               <h6>Exemplo de saída</h6>
-              <div class="example-text"></div>
+              <div class="example-text" id="example-output"></div>
+            </div>
+
+            <div class="example-section">
+              <h6>Custo</h6>
+              <div class="example-text" id="example-cost"></div>
             </div>
           </div>
         </div>
@@ -371,6 +383,27 @@
             </div>
           </div>
         </div>
+
+        <div class="tab-pane fade" id="ranking" role="tabpanel" aria-labelledby="ranking-tab">
+          <div class="ranking-content">
+            <table class="table ranking-table" id="tabela_ranking">
+              <thead>
+              <tr>
+                <th scope="col" style="width:72px; text-align:center;">#</th>
+                <th scope="col">Nome</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td colspan="2" style="text-align:center; color: var(--text-secondary);">
+                  Nenhum ranking disponível
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
 
         <!-- Mobile Código Tab -->
         <div class="tab-pane fade d-md-none mobile-code-container" id="codigo" role="tabpanel"
