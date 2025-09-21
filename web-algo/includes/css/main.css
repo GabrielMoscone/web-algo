@@ -304,6 +304,33 @@
       color: var(--text-primary);
     }
 
+    /* Ranking Tab */
+    .ranking-content {
+        padding: 1rem;
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .ranking-table {
+        background: transparent;
+        color: var(--text-primary);
+    }
+
+    .ranking-table thead th {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: none;
+        padding: 0.75rem;
+        font-weight: 600;
+    }
+
+    .ranking-table tbody td {
+        border-color: var(--border-color);
+        color: var(--text-secondary);
+        padding: 0.75rem;
+    }
+
     /* Code Editor */
     .code-editor-container {
       flex: 1;

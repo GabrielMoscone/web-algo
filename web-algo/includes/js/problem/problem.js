@@ -52,15 +52,42 @@ function renderProblemDetails(data) {
     const qTitle = document.getElementById('question');
     if (qTitle) qTitle.textContent = data?.description ?? '—';
 
-    const exampleTexts = document.querySelectorAll('#questao .example-text');
-    if (exampleTexts[0]) setTextWithBreaks(exampleTexts[0], data?.input);
-    if (exampleTexts[1]) setTextWithBreaks(exampleTexts[1], data?.output);
+    const inputEl = document.getElementById('example-input');
+    if (inputEl) setTextWithBreaks(inputEl, data?.input);
+
+    const outputEl = document.getElementById('example-output');
+    if (outputEl) setTextWithBreaks(outputEl, data?.output);
+
+    const costEl = document.getElementById('example-cost');
+    if (costEl) setTextWithBreaks(costEl, data?.cost);
 
     const solucoesSelect = document.getElementById('solucoes');
     if (solucoesSelect) {
         fillSolutionOptions(solucoesSelect, data?.solutions);
         if (solucoesSelect.options.length && !solucoesSelect.value) {
             solucoesSelect.selectedIndex = 0;
+        }
+    }
+
+    const tbody = document.querySelector('#tabela_ranking tbody');
+    if (tbody) {
+        const list = Array.isArray(data?.ranking) ? data.ranking : [];
+        if (list.length) {
+            tbody.innerHTML = list
+                .map((nome, i) =>
+                    `<tr>
+             <td style="text-align:center;">${i + 1}</td>
+             <td>${escapeHtml(nome)}</td>
+           </tr>`
+                )
+                .join('');
+        } else {
+            tbody.innerHTML = `
+        <tr>
+          <td colspan="2" style="text-align:center; color: var(--text-secondary);">
+            Nenhum ranking disponível
+          </td>
+        </tr>`;
         }
     }
 
