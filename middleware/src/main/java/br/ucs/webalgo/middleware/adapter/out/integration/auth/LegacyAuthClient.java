@@ -99,9 +99,9 @@ public class LegacyAuthClient implements AuthenticationPort {
     public Mono<ChangePasswordResult> changePassword(ChangePasswordCommand command) {
         LinkedMultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("login", command.username());
-        form.add("senha1", command.currentPassword());
+        form.add("senha1", command.newPassword());
         form.add("senha2", command.newPassword());
-        form.add("senha3", command.newPassword());
+        form.add("senha3", command.currentPassword());
 
         return client.post()
                 .uri("/alteraSenhap")
