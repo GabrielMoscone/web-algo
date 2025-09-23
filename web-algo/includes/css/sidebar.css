@@ -31,3 +31,11 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.sidebar-logo-ucs {
+    content: url("/web-algo/includes/media/logo_ucs_horizontal.png");
+}
+
+body.dark-mode .sidebar-logo-ucs {
+  content: url("/web-algo/includes/media/Logo-UCS-Horizontal_Branco.png");
+}
