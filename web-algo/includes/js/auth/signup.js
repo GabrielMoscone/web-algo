@@ -4,9 +4,20 @@ const form = document.getElementById('registerForm')
 form?.addEventListener('submit', async (e) => {
   e.preventDefault()
 
-  const fullName = document.getElementById('rg_name').value.trim()
-  const [firstName, ...rest] = fullName.split(' ')
-  const secondName = rest.join(' ')
+  const fullName = document.getElementById('rg_name').value || ''
+  const parts = fullName.trim().replace(/\s+/g, ' ').split(' ')
+
+  if (parts.length < 2) {
+    alert('Informe o nome completo (nome e sobrenome).')
+    if (typeof showStep === 'function') {
+      currentStep = 0
+      showStep(0)
+    }
+    return
+  }
+
+  const firstName = parts[0]
+  const secondName = parts.slice(1).join(' ')
 
   const payload = {
     firstName,
@@ -20,17 +31,12 @@ form?.addEventListener('submit', async (e) => {
     password: document.getElementById('rg_pwd').value,
   }
   const pwd2 = document.getElementById('rg_pwd2').value
-  const eBox = document.getElementById('rg_err')
-  const okBox = document.getElementById('rg_ok')
-  eBox.style.display = okBox.style.display = 'none'
 
   if (payload.password !== pwd2) {
-    eBox.textContent = 'As senhas não coincidem.'
-    eBox.style.display = 'block'
+    alert('As senhas não coincidem.')
     return
   } else if (payload.password.length < 7 || payload.password.length > 10) {
-    eBox.textContent = 'A senha informada não atende aos critérios!'
-    eBox.style.display = 'block'
+    alert('A senha informada não atende aos critérios!')
     return
   }
 
@@ -40,13 +46,9 @@ form?.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
-    okBox.textContent = 'Usuário criado com sucesso.'
-    okBox.style.display = 'block'
-
-    const el = document.getElementById('registerModal')
-    bootstrap.Modal.getOrCreateInstance(el).hide()
+    alert('Usuário criado com sucesso.')
+    window.location.replace('/login.html')
   } catch (ex) {
-    eBox.textContent = String(ex.message || 'Falha ao registrar usuário')
-    eBox.style.display = 'block'
+    alert(ex.message || 'Falha ao registrar usuário')
   }
 })
