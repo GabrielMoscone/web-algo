@@ -13,7 +13,7 @@ services:
       - ./web-algo/cadastro.html:/usr/share/nginx/html/cadastro.html:ro
       - ./web-algo/recuperar-senha.html:/usr/share/nginx/html/recuperar-senha.html:ro
       - ./web-algo/includes:/usr/share/nginx/html/includes:ro
-      - ./web-algo/assets:/usr/share/nginx/html/assets:ro
+      - ./web-algo/media:/usr/share/nginx/html/media:ro
     restart: unless-stopped
 
   middleware:
