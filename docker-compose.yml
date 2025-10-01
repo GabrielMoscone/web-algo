@@ -1,4 +1,5 @@
 services:
+  # ===== APLICACAO =====
   nginx:
     image: nginx:alpine
     container_name: nginx
@@ -13,6 +14,8 @@ services:
       - ./web-algo/includes:/usr/share/nginx/html/includes:ro
       - ./web-algo/media:/usr/share/nginx/html/media:ro
     restart: unless-stopped
+    networks:
+      - default
 
   middleware:
     build:
@@ -20,7 +23,10 @@ services:
       dockerfile: Dockerfile
     expose:
       - "8080"
+      - "8081"
     restart: unless-stopped
+    networks:
+      - default
 
   # ===== MONITORAMENTO =====
   prometheus:
@@ -31,7 +37,8 @@ services:
     command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=15d"]
     ports: ["9090:9090"]
     depends_on: [nginx]
-    networks: [default]
+    networks:
+      - default
 
   grafana:
     image: grafana/grafana:latest
@@ -41,7 +48,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
     depends_on: [prometheus, loki]
-    networks: [default]
+    networks:
+      - default
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -52,13 +60,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /sys:/sys:ro
-    networks: [default]
+    networks:
+      - default
 
   blackbox:
     image: prom/blackbox-exporter:latest
     container_name: blackbox
     ports: ["9115:9115"]
-    networks: [default]
+    networks:
+      - default
 
   nginx-exporter:
     image: ghcr.io/nginxinc/nginx-prometheus-exporter:0.11.0
@@ -66,9 +76,10 @@ services:
     command: ["-nginx.scrape-uri=http://nginx/nginx_status"]
     depends_on: [nginx]
     ports: ["9113:9113"]
-    networks: [default]
+    networks:
+      - default
 
-  # --- LOGS ---
+  # ===== LOGS =====
   loki:
     image: grafana/loki:2.9.6
     command: -config.file=/etc/loki/config/loki-config.yaml
@@ -76,6 +87,8 @@ services:
     volumes:
       - ./monitoring/loki-config.yaml:/etc/loki/config/loki-config.yaml:ro
       - loki-data:/loki
+    networks:
+      - default
 
   promtail:
     image: grafana/promtail:2.9.6
@@ -85,6 +98,12 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/log:/var/log:ro
     depends_on: [loki]
+    networks:
+      - default
 
 volumes:
   loki-data: {}
+
+networks:
+  default:
+    driver: bridge
