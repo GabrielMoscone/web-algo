@@ -9,20 +9,21 @@ scrape_configs:
     static_configs:
       - targets: ["middleware:8081"]
 
-  - job_name: 'nginx'
-    static_configs: [{ targets: ['nginx-exporter:9113'] }]
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
 
   - job_name: 'cadvisor'
-    static_configs: [{ targets: ['cadvisor:8080'] }]
+    static_configs:
+      - targets: ['cadvisor:8080']
 
-  - job_name: 'blackbox-frontend'
+  - job_name: 'blackbox'
     metrics_path: /probe
     params:
       module: [http_2xx]
     static_configs:
       - targets:
-          - http://nginx/login.html
-          - http://nginx/index.html
+          - http://nginx:80
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
