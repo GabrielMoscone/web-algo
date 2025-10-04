@@ -1,5 +1,7 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
+
 scrape_configs:
   - job_name: 'prometheus'
     static_configs: [{ targets: ['prometheus:9090'] }]
@@ -24,6 +26,8 @@ scrape_configs:
     static_configs:
       - targets:
           - http://nginx:80
+          - http://nginx:80/login.html
+          - http://nginx:80/api/v1/web-algo/problems/key/S
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target

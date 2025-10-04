@@ -34,7 +34,12 @@ services:
     container_name: prometheus
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=15d"]
+    command: 
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+      - "--enable-feature=remote-write-receiver"
+      - "--web.enable-remote-write-receiver"
+      - "--enable-feature=native-histograms"
     ports: ["9090:9090"]
     depends_on: [nginx]
     networks:
@@ -98,6 +103,18 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/log:/var/log:ro
     depends_on: [loki]
+    networks:
+      - default
+
+  k6:
+    image: grafana/k6:latest
+    container_name: k6
+    volumes:
+      - ./k6:/scripts
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+    entrypoint: ["sleep", "infinity"]
+    depends_on: [prometheus]
     networks:
       - default
 

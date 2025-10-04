@@ -1,0 +1,64 @@
+# ===== LOGS E DADOS TEMPORÁRIOS =====
+*.log
+logs/
+/monitoring/data/
+/monitoring/logs/
+
+# ===== DADOS DO GRAFANA (local) =====
+/monitoring/grafana-data/
+
+# ===== DADOS DO PROMETHEUS (local) =====
+/monitoring/prometheus-data/
+
+# ===== DADOS DO LOKI (local) =====
+/monitoring/loki-data/
+
+# ===== RESULTADOS DOS TESTES K6 (locais) =====
+/k6/results/
+/k6/output/
+/k6/*.html
+/k6/*.json.gz
+
+# ===== DOCKER VOLUMES =====
+.volumes/
+
+# ===== IDEs =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ===== SISTEMA OPERACIONAL =====
+.DS_Store
+Thumbs.db
+
+# ===== ARQUIVOS TEMPORÁRIOS =====
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# ===== CREDENCIAIS E CONFIGURAÇÕES LOCAIS =====
+.env
+.env.local
+.env.*.local
+config.local.*
+
+# ===== NODE MODULES (caso use npm para alguma coisa) =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== BUILDS E TARGETS =====
+target/
+build/
+dist/
+
+# ===== CERTIFICADOS =====
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
