@@ -62,3 +62,7 @@ dist/
 *.crt
 *.p12
 *.pfx
+
+.env
+*.env
+application-prod.properties
