@@ -9,7 +9,9 @@ scrape_configs:
   - job_name: "middleware"
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ["middleware:8081"]
+      - targets: 
+          - "middleware1:8081"
+          - "middleware2:8081"
 
   - job_name: 'nginx-exporter'
     static_configs:
