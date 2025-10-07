@@ -3,7 +3,9 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx
-    depends_on: [middleware]
+    depends_on:
+      - middleware1
+      - middleware2
     ports: ["8088:80"]
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -17,10 +19,27 @@ services:
     networks:
       - default
 
-  middleware:
+  middleware1:
     build:
       context: ./middleware
       dockerfile: Dockerfile
+    container_name: middleware1
+    environment:
+      WEB_ALGO_URL: ${WEB_ALGO_URL}
+    expose:
+      - "8080"
+      - "8081"
+    restart: unless-stopped
+    networks:
+      - default
+
+  middleware2:
+    build:
+      context: ./middleware
+      dockerfile: Dockerfile
+    container_name: middleware2
+    environment:
+      WEB_ALGO_URL: ${WEB_ALGO_URL}
     expose:
       - "8080"
       - "8081"
@@ -57,14 +76,28 @@ services:
       - default
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor
-    ports: ["8089:8080"]
+    privileged: true
+    ports:
+      - "8080:8080"
     volumes:
       - /:/rootfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run:/var/run:ro
       - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    command:
+      - '--docker_only=true'
+      - '--housekeeping_interval=10s'
+      - '--max_housekeeping_interval=15s'
+      - '--event_storage_event_limit=default=0'
+      - '--event_storage_age_limit=default=0'
+      - '--store_container_labels=true'
+      - '--whitelisted_container_labels=com.docker.compose.project,com.docker.compose.service,com.docker.compose.container-number'
+    restart: unless-stopped
     networks:
       - default
 

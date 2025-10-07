@@ -121,8 +121,6 @@ export function initSolutionsUI({
                 answer: 'ok'
             };
 
-            console.log(payload);
-
             try {
                 try { mostra_tela_aguarde?.('Salvando solução...'); } catch {}
                 await api('/solutions/save', {
