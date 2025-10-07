@@ -906,7 +906,7 @@
     },
     {
       "id": 17,
-      "title": "Requisições - Endpoints",
+      "title": "Top 10 Endpoints Mais Acessados",
       "type": "timeseries",
       "targets": [
         {
