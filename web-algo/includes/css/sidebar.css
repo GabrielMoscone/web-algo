@@ -33,9 +33,9 @@
 }
 
 .sidebar-logo-ucs {
-    content: url("/includes/media/logo_ucs_horizontal.png");
+    content: url("../media/logo_ucs_horizontal.png");
 }
 
 body.dark-mode .sidebar-logo-ucs {
-  content: url("/includes/media/Logo-UCS-Horizontal_Branco.png");
+  content: url("../media/Logo-UCS-Horizontal_Branco.png");
 }
