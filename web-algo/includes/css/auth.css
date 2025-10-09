@@ -9,11 +9,11 @@ body {
     margin: 0 auto 20px auto;
     max-width: 140px;
 
-  content: url("/web-algo/includes/media/Logo_UCS_Vertical_small.png");
+  content: url("../media/Logo_UCS_Vertical_small.png");
 }
 
 body.dark-mode .ucs-logo {
-  content: url("/web-algo/includes/media/logo_ucs_vertical_dark.png");
+  content: url("../media/logo_ucs_vertical_dark.png");
 }
 
 .form-control {
