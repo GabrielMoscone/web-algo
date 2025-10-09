@@ -30,8 +30,7 @@ form?.addEventListener('submit', async (e) => {
         okBox.textContent = 'Senha alterada com sucesso.';
         okBox.style.display = 'block';
 
-        const el = document.getElementById('changePwdModal');
-        bootstrap.Modal.getOrCreateInstance(el).hide();
+        window.location.replace('/login.html')
     } catch (ex) {
         eBox.textContent = String(ex.message || 'Falha ao alterar senha');
         eBox.style.display = 'block';

@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs: [{ targets: ['prometheus:9090'] }]
+
+  - job_name: "middleware"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: 
+          - "middleware1:8081"
+          - "middleware2:8081"
+
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://nginx:80
+          - http://nginx:80/login.html
+          - http://nginx:80/api/v1/web-algo/problems/key/S
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
