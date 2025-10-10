@@ -4,21 +4,17 @@ const rightPanel = document.querySelector('.right-panel')
 
 let isDragging = false
 
-dragHandle.addEventListener('mousedown', (e) => {
+const startDrag = (clientX) => {
   isDragging = true
   document.body.style.cursor = 'col-resize'
-})
+  moveDrag(clientX) // Ajusta imediatamente caso comece em um ponto específico
+}
 
-document.addEventListener('mouseup', () => {
-  isDragging = false
-  document.body.style.cursor = 'default'
-})
-
-document.addEventListener('mousemove', (e) => {
+const moveDrag = (clientX) => {
   if (!isDragging) return
 
   const totalWidth = leftPanel.parentElement.offsetWidth
-  let newLeftWidth = e.clientX
+  let newLeftWidth = clientX
   let newRightWidth = totalWidth - newLeftWidth - dragHandle.offsetWidth
 
   // Limites mínimos
@@ -33,11 +29,26 @@ document.addEventListener('mousemove', (e) => {
   rightPanel.style.width = `${
     totalWidth - newLeftWidth - dragHandle.offsetWidth
   }px`
-})
+}
 
-document.addEventListener('mouseup', () => {
+const stopDrag = () => {
   if (isDragging) {
     isDragging = false
     document.body.style.cursor = 'default'
   }
+}
+
+// Eventos para mouse
+dragHandle.addEventListener('mousedown', (e) => startDrag(e.clientX))
+document.addEventListener('mousemove', (e) => moveDrag(e.clientX))
+document.addEventListener('mouseup', stopDrag)
+
+// Eventos para touch (celular/tablet)
+dragHandle.addEventListener('touchstart', (e) =>
+  startDrag(e.touches[0].clientX)
+)
+document.addEventListener('touchmove', (e) => {
+  moveDrag(e.touches[0].clientX)
+  e.preventDefault() // impede scroll ao arrastar
 })
+document.addEventListener('touchend', stopDrag)
