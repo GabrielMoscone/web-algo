@@ -149,15 +149,15 @@
 
     /* Main Layout */
     .main-layout {
-      height: calc(100vh - 80px);
+      height: calc(100vh - 86px);
       display: flex;
       flex-direction: row;
     }
 
     .left-panel {
+      position: relative;
       background: var(--bg-secondary);
       border-right: 1px solid var(--border-color);
-      width: 50%;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -498,11 +498,13 @@
     @media (max-width: 768px) {
       .main-layout {
         flex-direction: column;
+        height: calc(100vh - 72px);
       }
 
       .left-panel,
       .right-panel {
         width: 100%;
+        transition: margin-left 0.3s ease;
       }
 
       .left-panel {
@@ -512,6 +514,7 @@
       .right-panel {
         height: 50vh;
       }
+
 
       /* Mobile tabs for code/console */
       .mobile-right-tabs {
@@ -534,6 +537,10 @@
       .navbar-nav {
         display: none;
       }
+
+      .toggle-left-panel {
+        display: none;
+      }
     }
 
     @media (min-width: 768px) {
@@ -541,10 +548,55 @@
         display: none;
       }
 
+      .main-layout {
+        height: calc(100vh - 86px);
+      }
+
       .desktop-right-layout {
         display: flex;
         flex-direction: column;
         height: 100%;
+      }
+
+      .toggle-left-panel {
+        position: absolute;
+        bottom: 10px;
+        left: 100%; 
+        transform: translateX(-100%);
+        background-color: var(--accent-green);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        z-index: 1000;
+        font-weight: bold;
+      }
+
+      .left-panel.closed .tab-content,
+      .left-panel.closed .panel-tabs {
+        display: none;
+      }
+
+      .left-panel.closed .toggle-left-panel {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .left-panel.closed {
+        width: 50px !important;
+        min-width: 50px !important;
+        overflow: hidden;
+        transition: width 0.3s ease;
+      }
+
+      .left-panel.open {
+        width: 50%;
+        min-width: 30%;
+        transition: width 0.3s ease;
+      }
+
+      .right-panel.shifted {
+        width: 100% !important;
       }
     }
 
