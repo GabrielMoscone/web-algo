@@ -112,9 +112,9 @@
         </svg>
       </button>
 
-      <a class="navbar-brand d-none d-lg-block" href="#" aria-label="WebAlgo">WebAlgo</a>
+      <a class="navbar-brand d-none d-md-block" href="#" aria-label="WebAlgo">WebAlgo</a>
 
-      <div class="navbar-nav me-auto">
+      <div class="navbar-nav me-auto flex-md-row">
         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#buscarAlgoritmoModal">
           Algoritmos
           <svg class="bi" width="24" height="24" role="img" aria-label="Buscar">
@@ -255,6 +255,8 @@
   <main class="main-layout">
     <!-- Left Panel -->
     <section class="left-panel">
+      <button class="toggle-left-panel" id="toggleLeftPanel">⮜</button>
+
       <div class="panel-tabs">
         <ul class="nav nav-tabs" id="leftPanelTabs" role="tablist">
           <li class="nav-item" role="presentation">
@@ -409,6 +411,9 @@
           aria-labelledby="codigo-tab"></div>
       </div>
     </section>
+
+    <!-- Drag Handle -->
+    <div id="drag-handle"></div>
 
     <!-- Right Panel -->
     <section class="right-panel d-none d-md-flex">
@@ -640,6 +645,7 @@ int main(){
   <script src="includes/js/resize.js" defer></script>
   <script src="includes/js/tuor.js" defer></script>
   <script src="includes/js/theme.js" defer></script>
+  <script src="includes/js/drag.js" defer></script>
 
   <!-- Initialize after DOM and scripts load -->
   <script defer>
@@ -647,6 +653,28 @@ int main(){
     var textareaElement = document.getElementById('displayText');
 
     document.addEventListener('DOMContentLoaded', function () {
+
+      const leftPanel = document.querySelector('.left-panel');
+      const rightPanel = document.querySelector('.right-panel');
+      const toggleBtn = document.getElementById('toggleLeftPanel');
+
+      // Estado inicial
+      leftPanel.classList.add('open');
+
+      toggleBtn.addEventListener('click', () => {
+        if (leftPanel.classList.contains('open')) {
+          leftPanel.classList.remove('open');
+          leftPanel.classList.add('closed');
+          rightPanel.classList.add('shifted');
+          toggleBtn.innerText = '⮞'; // seta indicando abrir
+        } else {
+          leftPanel.classList.remove('closed');
+          leftPanel.classList.add('open');
+          rightPanel.classList.remove('shifted');
+          toggleBtn.innerText = '⮜'; // seta indicando fechar
+        }
+      });
+
       // Initialize tooltips after Bootstrap loads
       setTimeout(() => {
         if (typeof bootstrap !== 'undefined') {
@@ -692,8 +720,6 @@ int main(){
         }
       });
 
-
-
       // Auto-complete setup
       CodeMirror.registerHelper("hint", "c", function (editor) {
         const completions = [
@@ -715,6 +741,11 @@ int main(){
 
       // Restore data after editor is ready
       restoreData();
+
+      const codigoTab = document.getElementById('codigo-tab');
+      codigoTab.addEventListener('click', () => {
+        window.editor.refresh()
+      });
 
       // Theme and font size controls
       const fontRange = document.getElementById('font-size-selector');
@@ -787,6 +818,8 @@ int main(){
       // Restore data one more time after everything is loaded
       setTimeout(restoreData, 300);
     });
+
+
   </script>
 
   <!-- Module scripts for authentication and problems -->
@@ -840,6 +873,8 @@ int main(){
     import { initSolutionsUI } from './includes/js/solution/solutions.js';
     initSolutionsUI({ selectId: 'solucoes', loadBtnId: 'btnCarregarSol' });
   </script>
+
+
 
 </body>
 
