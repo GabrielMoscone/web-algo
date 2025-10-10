@@ -410,6 +410,9 @@
       </div>
     </section>
 
+    <!-- Drag Handle -->
+    <div id="drag-handle"></div>
+
     <!-- Right Panel -->
     <section class="right-panel d-none d-md-flex">
       <div class="desktop-right-layout">
@@ -640,6 +643,7 @@ int main(){
   <script src="includes/js/resize.js" defer></script>
   <script src="includes/js/tuor.js" defer></script>
   <script src="includes/js/theme.js" defer></script>
+  <script src="includes/js/drag.js" defer></script>
 
   <!-- Initialize after DOM and scripts load -->
   <script defer>
@@ -692,8 +696,6 @@ int main(){
         }
       });
 
-
-
       // Auto-complete setup
       CodeMirror.registerHelper("hint", "c", function (editor) {
         const completions = [
@@ -715,6 +717,11 @@ int main(){
 
       // Restore data after editor is ready
       restoreData();
+
+      const codigoTab = document.getElementById('codigo-tab');
+      codigoTab.addEventListener('click', () => {
+        window.editor.refresh()
+      });
 
       // Theme and font size controls
       const fontRange = document.getElementById('font-size-selector');
@@ -840,6 +847,8 @@ int main(){
     import { initSolutionsUI } from './includes/js/solution/solutions.js';
     initSolutionsUI({ selectId: 'solucoes', loadBtnId: 'btnCarregarSol' });
   </script>
+
+
 
 </body>
 

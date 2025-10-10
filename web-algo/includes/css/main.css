@@ -170,6 +170,17 @@
       background: var(--bg-primary);
     }
 
+    #drag-handle {
+      width: 6px;
+      cursor: col-resize;
+      background-color: rgba(0, 0, 0, 0.1);
+      transition: background-color 0.2s;
+    }
+
+    #drag-handle:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
     /* Panel Tabs */
     .panel-tabs {
       border-bottom: 1px solid var(--border-color);
