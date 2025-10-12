@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  middleware1:
+    image: acrweba.azurecr.io/weba-middleware:1.0
+    restart: always
+
+  middleware2:
+    image: acrweba.azurecr.io/weba-middleware:1.0
+    restart: always
+
+  nginx:
+    image: acrweba.azurecr.io/weba-nginx:1.0
+    depends_on:
+      - middleware1
+      - middleware2
+    ports:
+      - "80:80"
+    restart: always
