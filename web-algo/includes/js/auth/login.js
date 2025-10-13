@@ -1,4 +1,5 @@
 import { login } from './auth.js';
+import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
 
 const form = document.getElementById('loginForm');
 const err  = document.getElementById('err');

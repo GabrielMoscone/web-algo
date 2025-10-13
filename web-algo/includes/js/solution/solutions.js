@@ -1,4 +1,5 @@
 import {api} from '../client/apiClient.js';
+import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
 
 function putCodeIntoEditor(sourceCode = '') {
     const code = typeof sourceCode === 'string' ? sourceCode : '';
