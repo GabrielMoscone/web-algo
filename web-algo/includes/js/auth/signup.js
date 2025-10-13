@@ -40,6 +40,7 @@ form?.addEventListener('submit', async (e) => {
     return
   }
 
+  mostra_tela_aguarde('Cadastrando usuário...');
   try {
     await api('/auth/signup', {
       method: 'POST',
@@ -50,5 +51,7 @@ form?.addEventListener('submit', async (e) => {
     window.location.replace('/login.html')
   } catch (ex) {
     alert(ex.message || 'Falha ao registrar usuário')
+  } finally {
+    esconde_tela_aguarde();
   }
 })
