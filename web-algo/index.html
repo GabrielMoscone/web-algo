@@ -527,22 +527,12 @@ int main(){
 
   <!-- Scripts - Load in optimal order -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module">
+    import { mostra_tela_aguarde, esconde_tela_aguarde } from './includes/js/utils.js';
+  </script>
 
   <!-- Critical scripts -->
   <script>
-    // Inline critical functions
-    function mostra_tela_aguarde(msg) {
-      "use strict";
-      if (msg == undefined) msg = '';
-      const aguardeEl = document.getElementById('tela_aguarde');
-      if (aguardeEl) aguardeEl.style.display = 'flex';
-    }
-
-    function esconde_tela_aguarde() {
-      "use strict";
-      const aguardeEl = document.getElementById('tela_aguarde');
-      if (aguardeEl) aguardeEl.style.display = 'none';
-    }
 
     // Performance optimizations
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
