@@ -7,9 +7,14 @@ const TYPE_TO_KEY = {
 };
 
 export async function loadProblemsByTypeLabel(label) {
-    const key = TYPE_TO_KEY[label] || 'S';
-    const data = await api(`/problems/key/${encodeURIComponent(key)}`);
-    return Array.isArray(data) ? data : (data?.codes ?? []);
+    mostra_tela_aguarde('Carregando problemas...');
+    try {
+        const key = TYPE_TO_KEY[label] || 'S';
+        const data = await api(`/problems/key/${encodeURIComponent(key)}`);
+        return Array.isArray(data) ? data : (data?.codes ?? []);
+    } finally {
+        esconde_tela_aguarde();
+    }
 }
 
 function setLoading(select, loading) {
@@ -45,7 +50,12 @@ function setTextWithBreaks(el, value) {
 }
 
 async function loadProblemDetailsByCode(code) {
-    return api(`/problems/${encodeURIComponent(code)}/details`);
+    mostra_tela_aguarde('Carregando detalhes...');
+    try {
+        return await api(`/problems/${encodeURIComponent(code)}/details`);
+    } finally {
+        esconde_tela_aguarde();
+    }
 }
 
 function renderProblemDetails(data) {

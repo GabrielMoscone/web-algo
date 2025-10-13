@@ -21,20 +21,25 @@ export function getCurrentUser() {
 }
 
 export async function login(username, password) {
-    const body = JSON.stringify({username, password});
-    const res = await api('/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body
-    });
+    mostra_tela_aguarde('Autenticando...');
+    try {
+        const data = await api('/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
+        });
 
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({username}));
-    setLegacyNameCookie(username);
-    return res;
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({username}));
+        setLegacyNameCookie(username);
+        return data;
+    } finally {
+        esconde_tela_aguarde();
+    }
 }
 
 export async function logout() {
     const user = getCurrentUser();
+    mostra_tela_aguarde('Encerrando sessão...');
     try {
         await api('/auth/logout', {
             method: 'POST',
@@ -46,6 +51,7 @@ export async function logout() {
     } finally {
         localStorage.removeItem(USER_STORAGE_KEY);
         clearLegacyCookies();
+        esconde_tela_aguarde();
     }
 }
 

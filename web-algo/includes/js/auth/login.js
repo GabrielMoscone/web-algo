@@ -6,6 +6,7 @@ const err  = document.getElementById('err');
 form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     err.style.display = 'none';
+    mostra_tela_aguarde('Entrando...');
     const u = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value;
     try {
@@ -14,5 +15,7 @@ form?.addEventListener('submit', async (e) => {
     } catch (ex) {
         err.textContent = ex.message === '401' ? 'Usuário ou senha inválidos' : 'Falha no login';
         err.style.display = 'block';
+    } finally {
+        esconde_tela_aguarde();
     }
 });

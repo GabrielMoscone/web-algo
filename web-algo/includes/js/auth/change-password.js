@@ -21,6 +21,7 @@ form?.addEventListener('submit', async (e) => {
         return;
     }
 
+    mostra_tela_aguarde('Alterando senha...');
     try {
         await api('/auth/change-password', {
             method: 'POST',
@@ -34,5 +35,7 @@ form?.addEventListener('submit', async (e) => {
     } catch (ex) {
         eBox.textContent = String(ex.message || 'Falha ao alterar senha');
         eBox.style.display = 'block';
+    } finally {
+        esconde_tela_aguarde();
     }
 });
