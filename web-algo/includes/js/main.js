@@ -1,3 +1,5 @@
+import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
+
 var esta_no_debug = false;
 
 function getUserInput2() {

@@ -1,5 +1,6 @@
 import {api} from '../client/apiClient.js';
 import {USER_STORAGE_KEY} from '../client/config.js';
+import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
 
 function setLegacyNameCookie(username) {
     const secure = location.protocol === 'https:' ? '; Secure' : '';
