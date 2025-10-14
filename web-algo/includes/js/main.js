@@ -1,6 +1,7 @@
 import { mostra_tela_aguarde, esconde_tela_aguarde } from './utils.js';
 
 var esta_no_debug = false;
+var debug_compiler = false;
 
 function getUserInput2() {
     return new Promise((resolve) => {
@@ -126,8 +127,10 @@ function carrega_historico_variaveis() {
 }
 
 function modifica_cor_linhas_editor_texto(linha_atual, linha_anterior) {
-    addLineDecoration(linha_atual - 1, 'line-decoration');
-    editor.scrollIntoView({line: linha_atual - 1, ch: 0}, 200); // O segundo parâmetro é o tempo de animação em milissegundos (opcional)
+    // Adiciona a decoração na linha atual
+    editor.addLineClass(linha_atual - 1, 'wrap', 'line-decoration');
+    editor.scrollIntoView({line: linha_atual - 1, ch: 0}, 200);
+    // Remove a decoração da linha anterior
     editor.removeLineClass(linha_anterior - 1, 'wrap', 'line-decoration');
 }
 
