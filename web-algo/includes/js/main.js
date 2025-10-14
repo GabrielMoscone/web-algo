@@ -175,7 +175,18 @@ function inicia_worker(debug = false) {
         .then(response => response.json())
         .then(data => {
             esconde_tela_aguarde();
-            document.getElementById('displayText').value = data.resultado;
+            // Verifica se existe resultado antes de atribuir
+            if (data.resultado) {
+                document.getElementById('displayText').value = data.resultado;
+            }
+            
+            if (data.c3e) {
+                dic_control.c3e = data.c3e;
+                const c3eEl = document.getElementById('id_p_c3e');
+                if (c3eEl) {
+                    c3eEl.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${data.c3e}</pre>`;
+                }
+            }
         })
         .catch(error => {
             esconde_tela_aguarde();
@@ -198,10 +209,17 @@ function inicia_worker(debug = false) {
             $("#inputText")[0].disabled = true;
             editor.setOption("readOnly", false);
             textareaElement.scrollTop = textareaElement.scrollHeight;
-            dic_control.c3e = event.data.c3e;
+            
+            if (event.data.c3e) {
+                dic_control.c3e = event.data.c3e;
+                const c3eEl = document.getElementById('id_p_c3e');
+                if (c3eEl) {
+                    c3eEl.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${event.data.c3e}</pre>`;
+                }
+            }
+            
             let count = 0;
             editor.eachLine(function (lineHandle) {
-                // Remove all classes from the line
                 editor.removeLineClass(count, 'wrap', 'line-decoration');
                 count++;
             });
