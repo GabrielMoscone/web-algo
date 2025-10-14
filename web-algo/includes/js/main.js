@@ -1,4 +1,4 @@
-import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
+import { mostra_tela_aguarde, esconde_tela_aguarde } from './utils.js';
 
 var esta_no_debug = false;
 
@@ -245,3 +245,7 @@ function inicia_worker(debug = false) {
         }
     };
 }
+
+// Expor funções globalmente para uso no HTML
+window.inicia_worker = inicia_worker;
+window.carrega_historico_variaveis = carrega_historico_variaveis;
