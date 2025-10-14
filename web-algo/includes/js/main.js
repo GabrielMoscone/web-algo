@@ -164,35 +164,6 @@ function inicia_worker(debug = false) {
     mostra_tela_aguarde('Compilando...');
     worker.postMessage({code: editor.getValue(), debug: debug_compiler});
 
-    const clientId = localStorage.getItem('clientId');
-    fetch('http://localhost:8088/api/compilar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({clientId: clientId})
-    })
-        .then(response => response.json())
-        .then(data => {
-            esconde_tela_aguarde();
-            // Verifica se existe resultado antes de atribuir
-            if (data.resultado) {
-                document.getElementById('displayText').value = data.resultado;
-            }
-            
-            if (data.c3e) {
-                dic_control.c3e = data.c3e;
-                const c3eEl = document.getElementById('id_p_c3e');
-                if (c3eEl) {
-                    c3eEl.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${data.c3e}</pre>`;
-                }
-            }
-        })
-        .catch(error => {
-            esconde_tela_aguarde();
-            console.error('Erro na API:', error);
-        });
-
     // Ouvir a resposta do Worker
     worker.onmessage = async function (event) {
 
