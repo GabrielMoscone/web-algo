@@ -1,6 +1,7 @@
-import { mostra_tela_aguarde, esconde_tela_aguarde } from '../utils.js';
+import { mostra_tela_aguarde, esconde_tela_aguarde } from './utils.js';
 
 var esta_no_debug = false;
+var debug_compiler = false;
 
 function getUserInput2() {
     return new Promise((resolve) => {
@@ -126,8 +127,10 @@ function carrega_historico_variaveis() {
 }
 
 function modifica_cor_linhas_editor_texto(linha_atual, linha_anterior) {
-    addLineDecoration(linha_atual - 1, 'line-decoration');
-    editor.scrollIntoView({line: linha_atual - 1, ch: 0}, 200); // O segundo parâmetro é o tempo de animação em milissegundos (opcional)
+    // Adiciona a decoração na linha atual
+    editor.addLineClass(linha_atual - 1, 'wrap', 'line-decoration');
+    editor.scrollIntoView({line: linha_atual - 1, ch: 0}, 200);
+    // Remove a decoração da linha anterior
     editor.removeLineClass(linha_anterior - 1, 'wrap', 'line-decoration');
 }
 
@@ -172,7 +175,18 @@ function inicia_worker(debug = false) {
         .then(response => response.json())
         .then(data => {
             esconde_tela_aguarde();
-            document.getElementById('displayText').value = data.resultado;
+            // Verifica se existe resultado antes de atribuir
+            if (data.resultado) {
+                document.getElementById('displayText').value = data.resultado;
+            }
+            
+            if (data.c3e) {
+                dic_control.c3e = data.c3e;
+                const c3eEl = document.getElementById('id_p_c3e');
+                if (c3eEl) {
+                    c3eEl.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${data.c3e}</pre>`;
+                }
+            }
         })
         .catch(error => {
             esconde_tela_aguarde();
@@ -195,10 +209,17 @@ function inicia_worker(debug = false) {
             $("#inputText")[0].disabled = true;
             editor.setOption("readOnly", false);
             textareaElement.scrollTop = textareaElement.scrollHeight;
-            dic_control.c3e = event.data.c3e;
+            
+            if (event.data.c3e) {
+                dic_control.c3e = event.data.c3e;
+                const c3eEl = document.getElementById('id_p_c3e');
+                if (c3eEl) {
+                    c3eEl.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word;">${event.data.c3e}</pre>`;
+                }
+            }
+            
             let count = 0;
             editor.eachLine(function (lineHandle) {
-                // Remove all classes from the line
                 editor.removeLineClass(count, 'wrap', 'line-decoration');
                 count++;
             });
@@ -245,3 +266,7 @@ function inicia_worker(debug = false) {
         }
     };
 }
+
+// Expor funções globalmente para uso no HTML
+window.inicia_worker = inicia_worker;
+window.carrega_historico_variaveis = carrega_historico_variaveis;

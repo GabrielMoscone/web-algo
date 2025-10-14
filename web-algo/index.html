@@ -61,42 +61,6 @@
         font-size: 300%;
       }
     }
-
-    /* Critical loading styles */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 9999;
-      color: white;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   </style>
 </head>
 
@@ -441,10 +405,10 @@ int main(){
   </main>
 
   <!-- Loading Overlay -->
-  <div class="loading-overlay" id="tela_aguarde" role="status" aria-label="Compilando">
+  <div class="loading-overlay" id="loading-overlay" role="status" aria-live="polite">
     <div class="loading-spinner" aria-hidden="true"></div>
-    <div>Compilando...</div>
-    <button type="button" class="btn btn-outline-danger" onclick="cancelarExecucao()">Cancelar</button>
+    <p id="loading-text">Compilando...</p>
+    <button type="button" class="btn btn-outline-danger mt-3" onclick="cancelarExecucao()">Cancelar</button>
   </div>
 
   <!-- Modal Selecionar Algoritmo -->
@@ -631,7 +595,7 @@ int main(){
   </script>
 
   <!-- Local scripts -->
-  <script src="includes/js/main.js" defer></script>
+  <script src="includes/js/main.js" defer type="module"></script>
   <script src="includes/js/resize.js" defer></script>
   <script src="includes/js/tuor.js" defer></script>
   <script src="includes/js/theme.js" defer></script>
