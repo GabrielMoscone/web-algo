@@ -7,7 +7,7 @@ const err  = document.getElementById('err');
 form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     err.style.display = 'none';
-    mostra_tela_aguarde('Entrando...');
+    mostra_tela_aguarde('Autenticando...');
     const u = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value;
     try {
