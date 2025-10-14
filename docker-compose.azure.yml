@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   nginx:
-    image: acrweba.azurecr.io/weba-nginx:1.2
+    image: acrweba.azurecr.io/weba-nginx:1.5
     ports:
       - "80:80"
     depends_on:
