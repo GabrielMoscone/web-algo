@@ -1,25 +1,58 @@
-version: "3.9"
+version: "3.8"
+
 services:
   nginx:
-    image: acrweba.azurecr.io/weba-nginx:1.6
-    ports:
-      - "80:80"
+    image: acrweba.azurecr.io/weba-nginx:1.12
     depends_on:
       - middleware1
       - middleware2
+      - grafana
+      - prometheus
+    expose:
+      - "80"
 
   middleware1:
     image: acrweba.azurecr.io/weba-middleware:1.0
     expose:
       - "8080"
     environment:
-      - SERVER_PORT=8080
-      - MANAGEMENT_SERVER_PORT=8081
+      - JAVA_TOOL_OPTIONS=-Dserver.port=8080 -Dserver.address=0.0.0.0
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 8080"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
 
   middleware2:
     image: acrweba.azurecr.io/weba-middleware:1.0
     expose:
       - "8080"
     environment:
-      - SERVER_PORT=8080
-      - MANAGEMENT_SERVER_PORT=8081
+      - JAVA_TOOL_OPTIONS=-Dserver.port=8080 -Dserver.address=0.0.0.0
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 8080"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    expose:
+      - "3000"
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    expose:
+      - "9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.external-url=/prometheus/
+      - --web.route-prefix=/
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
