@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: webalgo
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        
+        upstream middleware_backend {
+            server middleware:8080;
+        }
+        
+        # Detecta sessão pelo cookie
+        map $http_cookie $has_session {
+            default 0;
+            "~*sessionid=" 1;
+        }
+        
+        server {
+            listen 80;
+            server_name _;
+            root /usr/share/nginx/html;
+            
+            # Redireciona raiz conforme sessão
+            location = / {
+                if ($has_session = 0) {
+                    return 302 /login.html;
+                }
+                return 302 /index.html;
+            }
+            
+            # Arquivos estáticos (js, css, imagens)
+            location ~ \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                try_files $uri =404;
+                expires 1d;
+                add_header Cache-Control "public, immutable";
+            }
+            
+            # Páginas públicas
+            location ~ ^/(login\.html|cadastro\.html|recuperar-senha\.html)$ {
+                try_files $uri =404;
+            }
+            
+            # index.html protegido
+            location = /index.html {
+                if ($has_session = 0) {
+                    return 302 /login.html;
+                }
+                try_files $uri =404;
+            }
+            
+            # Outros arquivos HTML protegidos
+            location ~ \.(html)$ {
+                if ($has_session = 0) {
+                    return 302 /login.html;
+                }
+                try_files $uri =404;
+            }
+            
+            # Serve outros arquivos estáticos
+            location / {
+                try_files $uri $uri/ =404;
+            }
+            
+            # Proxy para middleware (API)
+            location /api/ {
+                proxy_pass http://middleware_backend;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header Connection "";
+                
+                # Timeouts
+                proxy_connect_timeout 60s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+                
+                # CORS
+                add_header 'Access-Control-Allow-Origin' '*' always;
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+                add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization' always;
+                
+                if ($request_method = 'OPTIONS') {
+                    return 204;
+                }
+            }
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: webalgo
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: webalgoacr.azurecr.io/nginx-webalgo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /login.html
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /login.html
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: webalgo
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP

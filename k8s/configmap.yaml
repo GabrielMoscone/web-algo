@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: webalgo
+data:
+  WEB_ALGO_URL: "http://IP_SERVIDOR"
