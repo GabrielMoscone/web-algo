@@ -30,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.resources.encoding>UTF-8</maven.resources.encoding>
-        <java.version>19</java.version>
+        <java.version>21</java.version>
     </properties>
 
     <dependencies>
