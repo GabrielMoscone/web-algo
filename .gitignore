@@ -13,13 +13,6 @@ logs/
 # ===== DADOS DO LOKI (local) =====
 /monitoring/loki-data/
 
-# ===== RESULTADOS DOS TESTES K6 (locais) =====
-/k6/results/
-/k6/output/
-/k6/*.html
-/k6/*.json.gz
-/k6/*
-
 # ===== DOCKER VOLUMES =====
 .volumes/
 
