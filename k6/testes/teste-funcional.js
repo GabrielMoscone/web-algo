@@ -99,7 +99,6 @@ function testAuthFlow() {
 function testCompleteAuthenticatedFlow() {
   console.log('Testando fluxo autenticado completo...');
   
-  // Login com usuário válido
   const loginPayload = JSON.stringify({
     username: 'fulano4',
     password: 'fulano4'
@@ -133,30 +132,42 @@ function testCompleteAuthenticatedFlow() {
     return;
   }
   
-  // Captura cookies
-  const jar = http.cookieJar();
-  const cookies = jar.cookiesForURL(loginResponse.url);
-  
+  // CORREÇÃO: Capturar sessionid do header Set-Cookie
   let sessionId = '';
-  let userName = '';
+  const setCookieHeader = loginResponse.headers['Set-Cookie'];
   
-  for (const [name, values] of Object.entries(cookies)) {
-    if (name === 'sessionid' && values.length > 0) {
-      sessionId = values[0];
-    }
-    if (name === 'name' && values.length > 0) {
-      userName = values[0];
-    }
+  if (setCookieHeader) {
+    const cookieArray = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+    cookieArray.forEach(cookie => {
+      if (cookie.includes('sessionid=')) {
+        const match = cookie.match(/sessionid=([^;]+)/);
+        if (match) sessionId = match[1];
+      }
+    });
   }
   
-  if (!sessionId || !userName) {
-    console.log('⚠️ Cookies não capturados, pulando testes autenticados');
+  // CORREÇÃO: Obter username do response body (não vem como cookie)
+  let userName = '';
+  try {
+    const body = JSON.parse(loginResponse.body);
+    userName = body.username || body.respostas || 'fulano4';
+  } catch (e) {
+    console.log(`⚠️ Erro ao parsear response body: ${e}`);
+    userName = 'fulano4';
+  }
+  
+  if (!sessionId) {
+    console.log(`❌ Cookie sessionid não encontrado!`);
+    functionalTestSuccess.add(false, { test: 'cookie_capture' });
     return;
   }
   
-  console.log(`✅ Cookies capturados - sessionid: OK, name: ${userName}`);
+  console.log(`✅ Cookies capturados - sessionid: ${sessionId.substring(0, 8)}..., name: ${userName}`);
+  functionalTestSuccess.add(true, { test: 'cookie_capture' });
   
+  // CORREÇÃO: Criar cookie 'name' manualmente (como o frontend faz)
   const cookieHeader = `sessionid=${sessionId}; name=${userName}`;
+  
   const authParams = {
     headers: {
       'Cookie': cookieHeader,

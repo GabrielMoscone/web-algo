@@ -16,6 +16,11 @@ services:
       - ./web-algo/includes:/usr/share/nginx/html/includes:ro
       - ./web-algo/media:/usr/share/nginx/html/media:ro
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
     networks:
       - default
 
@@ -24,7 +29,17 @@ services:
       context: ./middleware
       dockerfile: Dockerfile
     container_name: middleware1
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
     environment:
+      SPRING_PROFILES_ACTIVE: prod
+      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC"
       WEB_ALGO_URL: ${WEB_ALGO_URL}
     expose:
       - "8080"
@@ -38,7 +53,17 @@ services:
       context: ./middleware
       dockerfile: Dockerfile
     container_name: middleware2
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
     environment:
+      SPRING_PROFILES_ACTIVE: prod
+      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC"
       WEB_ALGO_URL: ${WEB_ALGO_URL}
     expose:
       - "8080"
@@ -140,10 +165,10 @@ services:
       - default
 
   k6:
-    image: grafana/k6:latest
+    image: grafana/k6
     container_name: k6
     volumes:
-      - ./k6:/scripts
+      - ./k6/testes:/scripts:ro
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
     entrypoint: ["sleep", "infinity"]
