@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   nginx:
-    image: acrweba.azurecr.io/weba-nginx:1.12
+    image: acrweba.azurecr.io/weba-nginx:1.13
     depends_on:
       - middleware1
       - middleware2
