@@ -172,6 +172,8 @@ export function searchScenario() {
   // Primeiro faz login para obter os cookies de sessão
   const user = USERS[Math.floor(Math.random() * USERS.length)];
   
+  console.log(`🔍 Iniciando busca para usuário: ${user.username}`);
+  
   const loginPayload = {
     username: user.username,
     password: user.password
@@ -188,7 +190,9 @@ export function searchScenario() {
     return; // Não continua se o login falhar
   }
   
-  // Captura os cookies da resposta (sessionid e name)
+  console.log(`✅ Login bem-sucedido para busca - ${user.username}`);
+  
+  // Captura os cookies da resposta usando K6 CookieJar
   const jar = http.cookieJar();
   const cookies = jar.cookiesForURL(loginResponse.url);
   
@@ -205,18 +209,29 @@ export function searchScenario() {
     }
   }
   
-  if (!sessionId || !userName) {
-    console.log(`❌ Cookies faltando para ${user.username} - sessionid: ${sessionId ? 'OK' : 'MISSING'}, name: ${userName ? userName : 'MISSING'}`);
+  // CORREÇÃO: Se não encontrou o cookie 'name', tentar extrair do body da resposta
+  if (!userName) {
+    try {
+      const body = JSON.parse(loginResponse.body);
+      userName = body.username || user.username;
+    } catch (e) {
+      userName = user.username; // Fallback para o username original
+    }
+  }
+  
+  if (!sessionId) {
+    console.log(`❌ Cookie sessionId não encontrado para ${user.username}`);
+    console.log(`   Cookies disponíveis: ${Object.keys(cookies).join(', ')}`);
     return;
   }
   
-  console.log(`🔑 Cookies obtidos para busca - User: ${userName}`);
+  console.log(`🔑 Cookies obtidos para busca - sessionid: ${sessionId.substring(0, 8)}..., name: ${userName}`);
   
   sleep(1);
   
   const searchTerm = SEARCH_TERMS[Math.floor(Math.random() * SEARCH_TERMS.length)];
   const problemCode = PROBLEM_CODES[Math.floor(Math.random() * PROBLEM_CODES.length)];
-  const solutionsCode = SOLUTIONS_CODES[Math.floor(Math.random() * PROBLEM_CODES.length)];
+  const solutionsCode = SOLUTIONS_CODES[Math.floor(Math.random() * SOLUTIONS_CODES.length)];
   
   console.log(`🔍 Buscando por: ${searchTerm} / ${problemCode} / ${solutionsCode}`);
   
@@ -243,6 +258,8 @@ export function searchScenario() {
   if (searchSuccess && problemResponse.status === 200) {
     successfulSearches.add(1);
     console.log(`✅ Problema encontrado para: ${searchTerm}`);
+  } else if (problemResponse.status === 401) {
+    console.log(`⚠️ Busca de problema retornou 401 (não autorizado) para ${userName}`);
   } else if (problemResponse.status !== 200 && problemResponse.status !== 404) {
     console.log(`⚠️ Busca de problema retornou status ${problemResponse.status}`);
   }
@@ -253,6 +270,7 @@ export function searchScenario() {
   let solutionResponse = http.get(`${API_URL}/solutions/${solutionsCode}/details`, {
     headers: headers,
   });
+  
   const solutionCheck = check(solutionResponse, {
     'Busca de solução executada': (r) => r.status === 200 || r.status === 404,
     'Solution response válido': (r) => r.body.length > 0,
@@ -277,6 +295,18 @@ export function searchScenario() {
   }
   
   sleep(2); // Pausa entre buscas
+  
+  // ADIÇÃO: Fazer logout após as buscas
+  const logoutPayload = JSON.stringify({ username: userName });
+  const logoutResponse = http.post(`${API_URL}/auth/logout`, logoutPayload, {
+    headers: Object.assign({}, headers, {'Content-Type': 'application/json'}),
+  });
+  
+  check(logoutResponse, {
+    'Logout realizado': (r) => r.status === 200 || r.status === 204,
+  });
+  
+  console.log(`🚪 Logout realizado para ${userName}`);
 }
 
 // ===== SETUP =====
