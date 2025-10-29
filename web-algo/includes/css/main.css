@@ -378,6 +378,8 @@ body {
     .code-editor-container {
       flex: 1;
       position: relative;
+      height: 100%;
+      max-height: calc(100vh - 279px);
     }
 
     .CodeMirror {
