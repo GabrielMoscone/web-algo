@@ -379,7 +379,7 @@ body {
       flex: 1;
       position: relative;
       height: 100%;
-      max-height: calc(100vh - 279px);
+      max-height: calc(100dvh - 279px);
     }
 
     .CodeMirror {
