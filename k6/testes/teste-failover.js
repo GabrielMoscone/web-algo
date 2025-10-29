@@ -15,7 +15,7 @@ export const options = {
     failover_test: {
       executor: 'constant-vus',
       vus: 20,
-      duration: '5m',
+      duration: '6m',
     },
   },
   thresholds: {
@@ -30,8 +30,8 @@ export const options = {
 export function setup() {
   console.log('\n=== TESTE DE FAILOVER ===');
   console.log('⏱️  Fase 1 (0-2min): Sistema normal - Todas instâncias ativas');
-  console.log('🔴 Fase 2 (2-3min): DESLIGUE UMA INSTÂNCIA - Testando failover');
-  console.log('🟢 Fase 3 (3-5min): RELIGUE A INSTÂNCIA - Testando recuperação\n');
+  console.log('🔴 Fase 2 (2-4min): DESLIGUE UMA INSTÂNCIA - Testando failover');
+  console.log('🟢 Fase 3 (4-6min): RELIGUE A INSTÂNCIA - Testando recuperação\n');
   
   const loginPayload = JSON.stringify({
     username: 'fulano4',
@@ -82,7 +82,7 @@ export function setup() {
 function getCurrentPhase(elapsedSeconds) {
   if (elapsedSeconds < 120) {
     return 'NORMAL';
-  } else if (elapsedSeconds < 180) {
+  } else if (elapsedSeconds < 240) {
     return 'FAILOVER';
   } else {
     return 'RECOVERY';
@@ -106,9 +106,9 @@ export default function (data) {
     console.log('\n⚠️  ===== EM 1 SEGUNDO: DESLIGUE UMA INSTÂNCIA DO MIDDLEWARE! =====\n');
   } else if (elapsedSeconds === 120) {
     console.log('\n🔴 ===== AGORA! DESLIGUE (docker-compose stop middleware-1) =====\n');
-  } else if (elapsedSeconds === 179) {
+  } else if (elapsedSeconds === 239) {
     console.log('\n⚠️  ===== EM 1 SEGUNDO: RELIGUE A INSTÂNCIA! =====\n');
-  } else if (elapsedSeconds === 180) {
+  } else if (elapsedSeconds === 240) {
     console.log('\n🟢 ===== AGORA! RELIGUE (docker-compose start middleware-1) =====\n');
   }
   
@@ -117,7 +117,7 @@ export default function (data) {
       'Cookie': data.cookies,
     },
     timeout: '10s',
-    tags: { phase: currentPhase }, // Adiciona tags para métricas por fase
+    tags: { phase: currentPhase },
   };
   
   const endpoints = [
@@ -190,14 +190,14 @@ export function handleSummary(data) {
   
   console.log('\n=== RESPONSE TIME (ms) ===');
   console.log(`📊 Média: ${avgOverall}ms | P95: ${p95Overall}ms | Max: ${maxOverall}ms`);
-  console.log(`🟢 Fase Normal P95: ${p95Normal}ms`);
-  console.log(`🔴 Fase Failover P95: ${p95Failover}ms`);
-  console.log(`🟢 Fase Recovery P95: ${p95Recovery}ms`);
+  console.log(`🟢 Fase Normal (0-2min) P95: ${p95Normal}ms`);
+  console.log(`🔴 Fase Failover (2-4min) P95: ${p95Failover}ms`);
+  console.log(`🟢 Fase Recovery (4-6min) P95: ${p95Recovery}ms`);
   
   console.log('\n=== ERROS POR FASE ===');
   console.log(`🟢 Fase Normal (0-2min): ${errorsNormal} erros`);
-  console.log(`🔴 Fase Failover (2-3min): ${errorsFailover} erros`);
-  console.log(`🟢 Fase Recovery (3-5min): ${errorsRecovery} erros`);
+  console.log(`🔴 Fase Failover (2-4min): ${errorsFailover} erros`);
+  console.log(`🟢 Fase Recovery (4-6min): ${errorsRecovery} erros`);
   console.log(`📊 Total de erros: ${totalErrors}`);
   
   console.log('\n=== ANÁLISE DETALHADA ===');
