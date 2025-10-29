@@ -408,7 +408,7 @@ body {
     }
 
     .console-output {
-      max-height: 240px;
+      max-height: 200px;
       flex: 1;
       padding: 1rem;
       overflow-y: auto;
