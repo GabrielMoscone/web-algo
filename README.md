@@ -97,3 +97,4 @@ docker-compose down
 - A orquestração dos serviços é feita via `docker-compose.yml` na raiz do projeto.
 
 ---
+
