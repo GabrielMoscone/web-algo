@@ -2,7 +2,6 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Counter, Trend, Rate } from 'k6/metrics';
 import { SharedArray } from 'k6/data';
-import exec from 'k6/execution';
 
 // Métricas customizadas
 const loginDuration = new Trend('login_duration');
@@ -47,19 +46,32 @@ const SEARCH_KEYS = new SharedArray('searchKeys', function () {
 export const options = {
     scenarios: {
         stress_test: {
-            executor: 'ramping-arrival-rate',
-            startRate: 50,
-            timeUnit: '1s',
-            preAllocatedVUs: 50,
-            maxVUs: 500,
+            executor: 'ramping-vus',
+            startVUs: 0,
             stages: [
-                { duration: '2m', target: 50 },   // Aquecimento
-                { duration: '3m', target: 100 },  // Aumento gradual
-                { duration: '3m', target: 200 },  // Continuando
-                { duration: '3m', target: 300 },  // Próximo do limite
-                { duration: '3m', target: 400 },  // Além do limite esperado
-                { duration: '2m', target: 0 },    // Ramp-down
+                { duration: '2m', target: 50 },    // Aquecimento gradual - 50 VUs
+                { duration: '2m', target: 50 },    // Mantém 50 VUs
+                { duration: '2m', target: 100 },   // Aumenta para 100 VUs
+                { duration: '2m', target: 100 },   // Mantém 100 VUs
+                { duration: '2m', target: 150 },   // Aumenta para 150 VUs
+                { duration: '2m', target: 150 },   // Mantém 150 VUs
+                { duration: '2m', target: 200 },   // Aumenta para 200 VUs
+                { duration: '2m', target: 200 },   // Mantém 200 VUs
+                { duration: '2m', target: 250 },   // Aumenta para 250 VUs
+                { duration: '2m', target: 250 },   // Mantém 250 VUs
+                { duration: '2m', target: 300 },   // Aumenta para 300 VUs
+                { duration: '2m', target: 300 },   // Mantém 300 VUs
+                { duration: '2m', target: 350 },   // Aumenta para 350 VUs
+                { duration: '2m', target: 350 },   // Mantém 350 VUs
+                { duration: '2m', target: 400 },   // Aumenta para 400 VUs
+                { duration: '2m', target: 400 },   // Mantém 400 VUs
+                { duration: '2m', target: 450 },   // Aumenta para 450 VUs
+                { duration: '2m', target: 450 },   // Mantém 450 VUs
+                { duration: '2m', target: 500 },   // Aumenta para 500 VUs
+                { duration: '2m', target: 500 },   // Mantém 500 VUs
+                { duration: '3m', target: 0 },     // Ramp-down gradual
             ],
+            gracefulRampDown: '30s',
         },
     },
     thresholds: {
@@ -68,12 +80,6 @@ export const options = {
     },
     summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
 };
-
-// Variáveis para controle de erro
-let errorWindowStart = Date.now();
-let errorsInWindow = 0;
-const ERROR_WINDOW_MS = 5000;
-const MAX_ERRORS_IN_WINDOW = 100;
 
 export function setup() {
     console.log('\n========================================================');
@@ -85,19 +91,23 @@ export function setup() {
     console.log('   3. Consulta de detalhes de problema');
     console.log('   4. Consulta de detalhes de solução');
     console.log('   5. Logout\n');
-    console.log('📊 Fases do teste:');
-    console.log('   1. 50 req/s por 2 minutos');
-    console.log('   2. 100 req/s por 3 minutos');
-    console.log('   3. 200 req/s por 3 minutos');
-    console.log('   4. 300 req/s por 3 minutos');
-    console.log('   5. 400 req/s por 3 minutos');
-    console.log('   6. Ramp-down por 2 minutos');
-    console.log('\n⏱️  Duração total: ~16 minutos\n');
-    console.log('⚠️  O teste PARARÁ automaticamente ao detectar:');
-    console.log(`   - Mais de ${MAX_ERRORS_IN_WINDOW} erros críticos em ${ERROR_WINDOW_MS/1000} segundos`);
-    console.log('   - Taxa de erro sustentada acima de 15%');
-    console.log('\n💡 Dica: Monitore em tempo real no Grafana');
+    console.log('📊 Fases do teste (aumento gradual):');
+    console.log('   1. 0 → 50 VUs (2min) + Mantém 50 VUs (2min)');
+    console.log('   2. 50 → 100 VUs (2min) + Mantém 100 VUs (2min)');
+    console.log('   3. 100 → 150 VUs (2min) + Mantém 150 VUs (2min)');
+    console.log('   4. 150 → 200 VUs (2min) + Mantém 200 VUs (2min)');
+    console.log('   5. 200 → 250 VUs (2min) + Mantém 250 VUs (2min)');
+    console.log('   6. 250 → 300 VUs (2min) + Mantém 300 VUs (2min)');
+    console.log('   7. 300 → 350 VUs (2min) + Mantém 350 VUs (2min)');
+    console.log('   8. 350 → 400 VUs (2min) + Mantém 400 VUs (2min)');
+    console.log('   9. 400 → 450 VUs (2min) + Mantém 450 VUs (2min)');
+    console.log('   10. 450 → 500 VUs (2min) + Mantém 500 VUs (2min)');
+    console.log('   11. Ramp-down gradual (3min)');
+    console.log('\n⏱️  Duração total: ~43 minutos\n');
+    console.log('💡 Dica: Monitore em tempo real no Grafana');
     console.log('   http://localhost:3000\n');
+    console.log('🎯 Objetivo: Identificar o ponto exato onde o sistema');
+    console.log('   começa a apresentar degradação de performance.\n');
     
     // Teste de conectividade
     console.log('🔍 Testando conectividade com a API...');
@@ -129,20 +139,6 @@ export function setup() {
 }
 
 export default function () {
-    const now = Date.now();
-    
-    // Reset da janela de erros
-    if (now - errorWindowStart > ERROR_WINDOW_MS) {
-        if (errorsInWindow > MAX_ERRORS_IN_WINDOW) {
-            console.log(`\n🛑 TESTE INTERROMPIDO: ${errorsInWindow} erros críticos em ${ERROR_WINDOW_MS/1000}s!`);
-            console.log(`⏱️  Tempo de execução até falha: ${Math.floor((now - errorWindowStart) / 1000)}s`);
-            exec.test.abort('Taxa de erro crítica detectada');
-            return;
-        }
-        errorsInWindow = 0;
-        errorWindowStart = now;
-    }
-
     // Seleciona um usuário aleatório
     const user = USERS[Math.floor(Math.random() * USERS.length)];
     
@@ -179,11 +175,8 @@ export default function () {
     if (!loginSuccess) {
         errorCounter.add(1);
         failureRate.add(1);
-        if (loginResponse.status === 0 || loginResponse.status >= 500) {
-            errorsInWindow++;
-        }
         sleep(0.1);
-        return;
+        return; // Continua o teste, apenas pula para próxima iteração
     }
 
     // Captura os cookies usando K6 CookieJar
@@ -215,9 +208,8 @@ export default function () {
     if (!sessionId) {
         errorCounter.add(1);
         failureRate.add(1);
-        errorsInWindow++;
         sleep(0.1);
-        return;
+        return; // Continua o teste, apenas pula para próxima iteração
     }
 
     const cookieHeader = `sessionid=${sessionId}; name=${userName}`;
@@ -248,9 +240,6 @@ export default function () {
     if (!searchSuccess) {
         errorCounter.add(1);
         failureRate.add(1);
-        if (searchResponse.status === 0 || searchResponse.status >= 500) {
-            errorsInWindow++;
-        }
     }
 
     sleep(0.2); // Simula tempo de "pensar" do usuário
@@ -279,9 +268,6 @@ export default function () {
     if (!problemSuccess) {
         errorCounter.add(1);
         failureRate.add(1);
-        if (problemResponse.status === 0 || problemResponse.status >= 500) {
-            errorsInWindow++;
-        }
     }
 
     sleep(0.2);
@@ -311,9 +297,6 @@ export default function () {
     if (!solutionSuccess) {
         errorCounter.add(1);
         failureRate.add(1);
-        if (solutionResponse.status === 0 || solutionResponse.status >= 500) {
-            errorsInWindow++;
-        }
     }
 
     sleep(0.2);
@@ -344,9 +327,6 @@ export default function () {
     if (!logoutSuccess) {
         errorCounter.add(1);
         failureRate.add(1);
-        if (logoutResponse.status === 0 || logoutResponse.status >= 500) {
-            errorsInWindow++;
-        }
     } else {
         failureRate.add(0);
     }
@@ -360,8 +340,9 @@ export function handleSummary(data) {
     const errorRate = requests > 0 ? (errors / requests * 100) : 0;
     const avgDuration = data.metrics.http_req_duration?.values.avg || 0;
     const p95Duration = data.metrics.http_req_duration?.values['p(95)'] || 0;
+    const p99Duration = data.metrics.http_req_duration?.values['p(99)'] || 0;
     const maxVUs = data.metrics.vus_max?.values.max || 0;
-    const testDurationSec = (data.state.testRunDurationMs / 1000).toFixed(2);
+    const testDurationMin = (data.state.testRunDurationMs / 60000).toFixed(2);
 
     // Métricas específicas
     const avgLogin = data.metrics.login_duration?.values.avg || 0;
@@ -373,15 +354,16 @@ export function handleSummary(data) {
     const totalProblemCalls = data.metrics.problem_api_calls?.values.count || 0;
     const totalSolutionCalls = data.metrics.solution_api_calls?.values.count || 0;
 
+    // Análise de degradação por faixa de VUs
     console.log('\n========================================================');
     console.log('           RESUMO DO TESTE DE CAPACIDADE');
     console.log('========================================================\n');
-    console.log(`⏱️  Duração do Teste: ${testDurationSec}s`);
+    console.log(`⏱️  Duração do Teste: ${testDurationMin} minutos`);
     console.log(`📊 Requisições Totais: ${requests}`);
     console.log(`✅ Sucessos: ${requests - errors}`);
     console.log(`❌ Erros: ${errors}`);
     console.log(`📈 Taxa de Erro: ${errorRate.toFixed(2)}%`);
-    console.log(`👥 VUs Máximos: ${maxVUs}`);
+    console.log(`👥 VUs Máximos Atingidos: ${maxVUs}`);
     
     console.log('\n📊 DURAÇÃO MÉDIA POR OPERAÇÃO:');
     console.log(`   🔐 Login: ${avgLogin.toFixed(2)}ms`);
@@ -389,24 +371,45 @@ export function handleSummary(data) {
     console.log(`   📝 Detalhes problema: ${avgProblemDetails.toFixed(2)}ms`);
     console.log(`   💾 Detalhes solução: ${avgSolutionDetails.toFixed(2)}ms`);
     console.log(`   🚪 Logout: ${avgLogout.toFixed(2)}ms`);
-    console.log(`   📊 Geral: ${avgDuration.toFixed(2)}ms`);
+    console.log(`   📊 Média Geral: ${avgDuration.toFixed(2)}ms`);
     console.log(`   📈 P95: ${p95Duration.toFixed(2)}ms`);
+    console.log(`   🔝 P99: ${p99Duration.toFixed(2)}ms`);
     
     console.log('\n📈 CHAMADAS POR API:');
     console.log(`   🔍 APIs de Problemas: ${totalProblemCalls}`);
     console.log(`   💾 APIs de Soluções: ${totalSolutionCalls}`);
     
+    // Análise de ponto de ruptura
+    console.log('\n🎯 ANÁLISE DE CAPACIDADE:');
+    
+    if (errorRate < 5) {
+        console.log(`   ✅ Sistema estável em ${maxVUs} VUs`);
+        console.log(`   📊 Taxa de erro baixa (${errorRate.toFixed(2)}%)`);
+        console.log(`   💡 Sistema pode suportar mais carga`);
+    } else if (errorRate < 15) {
+        console.log(`   ⚠️  Sistema começando a degradar em ${maxVUs} VUs`);
+        console.log(`   📊 Taxa de erro moderada (${errorRate.toFixed(2)}%)`);
+        console.log(`   💡 Próximo ao limite de capacidade`);
+    } else {
+        console.log(`   ❌ Sistema sobrecarregado em ${maxVUs} VUs`);
+        console.log(`   📊 Taxa de erro alta (${errorRate.toFixed(2)}%)`);
+        console.log(`   💡 Limite de capacidade ultrapassado`);
+    }
+    
+    if (p95Duration > 2000) {
+        console.log(`\n⚠️  P95 acima do threshold (${p95Duration.toFixed(2)}ms > 2000ms)`);
+        console.log(`   Considere escalar horizontalmente ou otimizar queries`);
+    }
+    
     if (requests > 0) {
         const successfulRequests = requests - errors;
-        const estimatedCapacity = successfulRequests / (data.state.testRunDurationMs / 1000);
-        console.log(`\n🎯 CAPACIDADE ESTIMADA DO SISTEMA:`);
-        console.log(`   ~${estimatedCapacity.toFixed(2)} requisições bem-sucedidas/segundo`);
-        console.log(`   ~${(estimatedCapacity / 5).toFixed(2)} fluxos completos/segundo`);
+        const estimatedRPS = successfulRequests / (data.state.testRunDurationMs / 1000);
+        const estimatedFlowsPS = estimatedRPS / 5;
         
-        if (errorRate > 10) {
-            console.log(`\n⚠️  ATENÇÃO: Taxa de erro de ${errorRate.toFixed(2)}% indica que o sistema`);
-            console.log(`   atingiu seu limite de capacidade.`);
-        }
+        console.log(`\n💪 CAPACIDADE MEDIDA:`);
+        console.log(`   ~${estimatedRPS.toFixed(2)} req/s bem-sucedidas`);
+        console.log(`   ~${estimatedFlowsPS.toFixed(2)} fluxos completos/s`);
+        console.log(`   ~${(estimatedFlowsPS * 60).toFixed(0)} fluxos/minuto`);
     }
     
     console.log('\n========================================================\n');
