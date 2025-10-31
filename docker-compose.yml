@@ -19,8 +19,15 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
-          memory: 512M
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
     networks:
       - default
 
@@ -39,11 +46,15 @@ services:
           memory: 1G
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC"
+      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1"
       WEB_ALGO_URL: ${WEB_ALGO_URL}
     expose:
       - "8080"
       - "8081"
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
     restart: unless-stopped
     networks:
       - default
@@ -63,11 +74,15 @@ services:
           memory: 1G
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC"
+      JAVA_OPTS: "-Xms512m -Xmx1536m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1"
       WEB_ALGO_URL: ${WEB_ALGO_URL}
     expose:
       - "8080"
       - "8081"
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
     restart: unless-stopped
     networks:
       - default
