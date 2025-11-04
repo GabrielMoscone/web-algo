@@ -49,27 +49,19 @@ export const options = {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                { duration: '2m', target: 50 },    // Aquecimento gradual - 50 VUs
+                { duration: '1m', target: 50 },    // Aquecimento - 50 VUs
                 { duration: '2m', target: 50 },    // Mantém 50 VUs
-                { duration: '2m', target: 100 },   // Aumenta para 100 VUs
+                { duration: '1m', target: 100 },   // Aumenta para 100 VUs
                 { duration: '2m', target: 100 },   // Mantém 100 VUs
-                { duration: '2m', target: 150 },   // Aumenta para 150 VUs
+                { duration: '1m', target: 150 },   // Aumenta para 150 VUs
                 { duration: '2m', target: 150 },   // Mantém 150 VUs
-                { duration: '2m', target: 200 },   // Aumenta para 200 VUs
+                { duration: '1m', target: 200 },   // Aumenta para 200 VUs
                 { duration: '2m', target: 200 },   // Mantém 200 VUs
-                { duration: '2m', target: 250 },   // Aumenta para 250 VUs
+                { duration: '1m', target: 250 },   // Aumenta para 250 VUs
                 { duration: '2m', target: 250 },   // Mantém 250 VUs
-                { duration: '2m', target: 300 },   // Aumenta para 300 VUs
+                { duration: '1m', target: 300 },   // Aumenta para 300 VUs
                 { duration: '2m', target: 300 },   // Mantém 300 VUs
-                { duration: '2m', target: 350 },   // Aumenta para 350 VUs
-                { duration: '2m', target: 350 },   // Mantém 350 VUs
-                { duration: '2m', target: 400 },   // Aumenta para 400 VUs
-                { duration: '2m', target: 400 },   // Mantém 400 VUs
-                { duration: '2m', target: 450 },   // Aumenta para 450 VUs
-                { duration: '2m', target: 450 },   // Mantém 450 VUs
-                { duration: '2m', target: 500 },   // Aumenta para 500 VUs
-                { duration: '2m', target: 500 },   // Mantém 500 VUs
-                { duration: '3m', target: 0 },     // Ramp-down gradual
+                { duration: '2m', target: 0 },     // Ramp-down
             ],
             gracefulRampDown: '30s',
         },
@@ -91,19 +83,15 @@ export function setup() {
     console.log('   3. Consulta de detalhes de problema');
     console.log('   4. Consulta de detalhes de solução');
     console.log('   5. Logout\n');
-    console.log('📊 Fases do teste (aumento gradual):');
-    console.log('   1. 0 → 50 VUs (2min) + Mantém 50 VUs (2min)');
-    console.log('   2. 50 → 100 VUs (2min) + Mantém 100 VUs (2min)');
-    console.log('   3. 100 → 150 VUs (2min) + Mantém 150 VUs (2min)');
-    console.log('   4. 150 → 200 VUs (2min) + Mantém 200 VUs (2min)');
-    console.log('   5. 200 → 250 VUs (2min) + Mantém 250 VUs (2min)');
-    console.log('   6. 250 → 300 VUs (2min) + Mantém 300 VUs (2min)');
-    console.log('   7. 300 → 350 VUs (2min) + Mantém 350 VUs (2min)');
-    console.log('   8. 350 → 400 VUs (2min) + Mantém 400 VUs (2min)');
-    console.log('   9. 400 → 450 VUs (2min) + Mantém 450 VUs (2min)');
-    console.log('   10. 450 → 500 VUs (2min) + Mantém 500 VUs (2min)');
-    console.log('   11. Ramp-down gradual (3min)');
-    console.log('\n⏱️  Duração total: ~43 minutos\n');
+    console.log('📊 Fases do teste (aumento rápido):');
+    console.log('   1. 0 → 50 VUs (1min) + Mantém 50 VUs (2min)');
+    console.log('   2. 50 → 100 VUs (1min) + Mantém 100 VUs (2min)');
+    console.log('   3. 100 → 150 VUs (1min) + Mantém 150 VUs (2min)');
+    console.log('   4. 150 → 200 VUs (1min) + Mantém 200 VUs (2min)');
+    console.log('   5. 200 → 250 VUs (1min) + Mantém 250 VUs (2min)');
+    console.log('   6. 250 → 300 VUs (1min) + Mantém 300 VUs (2min)');
+    console.log('   7. Ramp-down (2min)');
+    console.log('\n⏱️  Duração total: ~20 minutos\n');
     console.log('💡 Dica: Monitore em tempo real no Grafana');
     console.log('   http://localhost:3000\n');
     console.log('🎯 Objetivo: Identificar o ponto exato onde o sistema');
